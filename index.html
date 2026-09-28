@@ -1,7 +1,7 @@
 <!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
-<title>ZRH快跑</title>
+<title>希思罗机场传奇</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=ZCOOL+QingKe+HuangYou&family=Noto+Sans+SC:wght@500;900&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=ZCOOL+QingKe+HuangYou&family=Bebas+Neue&family=JetBrains+Mono:wght@700&family=Noto+Sans+SC:wght@500;900&display=swap">
 <style>
 :root{
   color-scheme: dark;
@@ -31,6 +31,46 @@ body{font-family:var(--body);color:var(--ink);-webkit-user-select:none;user-sele
 .dfill{height:100%;width:100%;background:#35c75a;transition:background .2s}
 .danger.hot .stat{background:var(--red);color:#fff;animation:pulse .5s infinite alternate}
 @keyframes pulse{to{transform:scale(1.08)}}
+
+/* HUD polish (airport signage) */
+.track{height:14px;background:rgba(10,12,26,.72);border:1.5px solid rgba(255,255,255,.22);box-shadow:0 4px 14px rgba(0,0,0,.35);backdrop-filter:blur(6px)}
+.fill{background:linear-gradient(90deg,#ffb400,#ffd200);border-radius:7px}
+.start{color:rgba(255,255,255,.6)}
+.end{background:#ffd200;color:#111;right:-2px}
+.stat,.btn-ic{background:rgba(10,12,26,.72);color:#fff;border:1.5px solid rgba(255,255,255,.22);box-shadow:0 4px 14px rgba(0,0,0,.35);backdrop-filter:blur(6px)}
+.stat{border-radius:999px;padding:3px 11px;font-size:12.5px}
+.btn-ic{border-radius:10px}
+.dbar{border:1.5px solid rgba(255,255,255,.3);background:rgba(0,0,0,.4);border-radius:999px}
+.danger.hot .stat{background:#e0142b;border-color:#fff}
+.card{box-shadow:0 18px 50px rgba(0,0,0,.45),6px 6px 0 var(--line)}
+.back{align-self:flex-start;appearance:none;border:0;background:none;font:900 13px var(--body);color:var(--muted);cursor:pointer;padding:0}
+.back:hover{color:var(--red)}
+
+/* main menu: departure board */
+.menu{background:radial-gradient(ellipse at 50% 30%,rgba(8,10,24,.25),rgba(4,6,16,.85));flex-direction:column}
+.fidsbox{width:100%;max-width:720px;display:flex;flex-direction:column;gap:18px}
+.eyebrow{font:700 11px "JetBrains Mono",monospace;letter-spacing:.2em;color:#ffd200;opacity:.85}
+.mt{display:flex;flex-direction:column;gap:4px}
+.mt-cn{margin:0;font-family:var(--display);font-weight:400;font-size:clamp(40px,9.5vw,84px);line-height:1;color:#fff;letter-spacing:.04em;text-shadow:0 0 30px rgba(255,210,0,.35),0 4px 0 #000;text-wrap:balance}
+.mt-en{font-family:"Bebas Neue",Impact,sans-serif;font-size:clamp(20px,4.2vw,36px);letter-spacing:.18em;color:#ffd200;line-height:1}
+.mt-sub{font-size:13px;color:rgba(255,255,255,.7);font-weight:500;margin-top:6px}
+.board{background:#0b0b0d;border:1.5px solid #2a2a30;border-radius:12px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.6)}
+.bhead,.brow{display:grid;grid-template-columns:86px 1fr 118px;align-items:center;gap:12px;padding:10px 16px}
+.bhead{background:#ffd200;color:#111;font:900 11px var(--body);letter-spacing:.08em}
+.bhead span:last-child,.brow .st{text-align:right}
+.brow{border-top:1px solid #222;color:#f2f2f2;background:none;border-left:0;border-right:0;border-bottom:0;width:100%;text-align:left;font:inherit;cursor:pointer;transition:background .15s}
+.brow:hover:not(:disabled),.brow:focus-visible{background:#1b1b20;outline:none}
+.brow:disabled{cursor:default;opacity:.55}
+.fl{font:700 15px "JetBrains Mono",monospace;color:#ffd200;letter-spacing:.04em}
+.dest b{display:block;font-size:17px;font-weight:900}
+.dest small{display:block;font-size:12px;color:#9a9aa6;margin-top:2px}
+.st{font:700 12px "JetBrains Mono",monospace;letter-spacing:.06em}
+.st.ok{color:#35e06a}.st.ok i{display:inline-block;width:7px;height:7px;border-radius:50%;background:#35e06a;margin-right:6px;vertical-align:1px;animation:blink 1s infinite}
+.st.dl{color:#ff9f1a}
+@keyframes blink{50%{opacity:.2}}
+.mfoot{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;font:700 11px "JetBrains Mono",monospace;color:rgba(255,255,255,.55);letter-spacing:.06em}
+@media (max-width:520px){.bhead,.brow{grid-template-columns:62px 1fr 76px;gap:8px;padding:10px 12px}.fl{font-size:13px}.dest b{font-size:15px}.st{font-size:10.5px}}
+@media (prefers-reduced-motion:reduce){.st.ok i{animation:none}}
 
 /* touch zones */
 #touch{position:absolute;left:0;right:0;bottom:0;display:none;justify-content:space-between;padding:0 14px calc(env(safe-area-inset-bottom,0px) + 14px);pointer-events:none}
@@ -99,9 +139,29 @@ h2{margin:0;font-family:var(--display);font-weight:400;font-size:clamp(34px,9vw,
 
   <div id="touch"><span>⬇ 滑铲</span><span>跳 ⬆ 可二段</span></div>
 
+  <!-- main menu -->
+  <div class="screen menu" id="sMenu">
+    <div class="fidsbox">
+      <div class="eyebrow">LHR · EGLL · 51°28′N 000°27′W</div>
+      <div class="mt">
+        <h1 class="mt-cn"><span style="display:inline-block">伦敦希思罗</span><span style="display:inline-block">机场传奇</span></h1>
+        <div class="mt-en">London Heathrow Airport Legend</div>
+        <div class="mt-sub">一个拍机佬的传奇 · The legend of a planespotter</div>
+      </div>
+      <div class="board" role="list">
+        <div class="bhead"><span>航班 FLIGHT</span><span>章节 CHAPTER</span><span>状态 STATUS</span></div>
+        <button class="brow" id="bCh1"><span class="fl">LHR301</span><span class="dest"><b>第一章 · ZRH快跑</b><small>Chapter 1 · Run, ZRH! 逃出301室，冲向301机坪</small></span><span class="st ok"><i></i>登机 BOARDING</span></button>
+        <button class="brow" disabled><span class="fl">LHR302</span><span class="dest"><b>第二章 · 敬请期待</b><small>Chapter 2 · Coming soon</small></span><span class="st dl">延误 DELAYED</span></button>
+        <button class="brow" disabled><span class="fl">LHR303</span><span class="dest"><b>第三章 · 敬请期待</b><small>Chapter 3 · Coming soon</small></span><span class="st dl">待定 TBA</span></button>
+      </div>
+      <div class="mfoot"><span id="mBest">最快纪录 BEST —</span><span>点击航班进入 · TAP A FLIGHT TO BOARD</span></div>
+    </div>
+  </div>
+
   <!-- title -->
-  <div class="screen" id="sTitle">
+  <div class="screen" id="sTitle" hidden>
     <div class="card">
+      <button class="back" id="bMenu1">← 返回主界面 Main menu</button>
       <div class="kicker">一个拍机佬的逃亡</div>
       <h1>ZRH快跑！<small>目标：301 机坪</small></h1>
       <div class="panels">
@@ -143,6 +203,7 @@ h2{margin:0;font-family:var(--display);font-weight:400;font-size:clamp(34px,9vw,
         <div><b id="oCam">0</b><span>捡到器材</span></div>
       </div>
       <div class="row"><button class="go" id="bRetry">再跑一次</button><button class="go alt" data-share="over">分享</button></div>
+      <button class="back" id="bMenu2">← 返回主界面 Main menu</button>
     </div>
   </div>
 
@@ -160,6 +221,7 @@ h2{margin:0;font-family:var(--display);font-weight:400;font-size:clamp(34px,9vw,
       </div>
       <div class="best" id="wBest"></div>
       <div class="row"><button class="go" id="bAgain">再跑一次</button><button class="go alt" data-share="win">分享战绩</button></div>
+      <button class="back" id="bMenu3">← 返回主界面 Main menu</button>
     </div>
   </div>
 
@@ -251,7 +313,7 @@ function resize(){
 addEventListener('resize',resize);resize();
 
 /* ---------- state ---------- */
-let state='title',G=null;
+let state='menu',G=null;
 function newGame(){
   G={dist:0,t:0,speed:300,gap:170,cams:0,hits:0,
     p:{y:0,vy:0,jumps:0,slide:0,stumble:0,inv:0,onGround:true,queue:false,run:0},
@@ -264,11 +326,11 @@ newGame();
 
 let best=null;
 try{const b=localStorage.getItem('zrh_run_best');if(b)best=parseFloat(b);}catch(e){}
-function showBest(){ $('bestT').textContent=best?`你的最快纪录：${best.toFixed(1)} 秒`:''; }
+function showBest(){ $('bestT').textContent=best?`你的最快纪录：${best.toFixed(1)} 秒`:''; $('mBest').textContent='最快纪录 BEST '+(best?best.toFixed(1)+'s':'—'); }
 showBest();
 
 /* ---------- screens ---------- */
-const screens=['sTitle','sPause','sOver','sWin','sShare'];
+const screens=['sMenu','sTitle','sPause','sOver','sWin','sShare'];
 function show(id){screens.forEach(s=>$(s).hidden=(s!==id));}
 function setState(s){
   state=s;
@@ -288,6 +350,10 @@ function toast(m){const t=$('toast');t.textContent=m;t.classList.add('on');clear
 $('bStart').onclick=start; $('bRetry').onclick=start; $('bAgain').onclick=start;
 $('bResume').onclick=resume;
 $('bQuit').onclick=()=>{newGame();setState('title');show('sTitle');showBest();};
+function toMenu(){newGame();setState('menu');show('sMenu');showBest();}
+function toTitle(){newGame();setState('title');show('sTitle');showBest();SFX.coin();}
+$('bCh1').onclick=toTitle;
+['bMenu1','bMenu2','bMenu3'].forEach(id=>$(id).onclick=toMenu);
 $('bPause').onclick=()=>state==='play'?pause():resume();
 $('bMute').onclick=()=>{muted=!muted;$('bMute').textContent=muted?'🔇':'🔊';};
 
@@ -326,6 +392,8 @@ function slide(){
 addEventListener('keydown',e=>{
   const k=e.code;
   if(['Space','ArrowUp','ArrowDown','KeyW','KeyS'].includes(k))e.preventDefault();
+  if(state==='menu'&&k==='Enter'){toTitle();return;}
+  if(state==='title'&&k==='Escape'){toMenu();return;}
   if(state==='title'&&(k==='Enter'||k==='Space')){start();return;}
   if((state==='over'||state==='win')&&k==='Enter'){start();return;}
   if(k==='Space'||k==='ArrowUp'||k==='KeyW'){if(!e.repeat)jump();}
@@ -843,6 +911,13 @@ function drawEnding(t){
 /* ---------- main render ---------- */
 function render(){
   ctx.setTransform(S*DPR,0,0,S*DPR,0,0);
+  if(state==='menu'){
+    bgAirport(G.dist);
+    const k=mod(G.t*95,VW+700)-350;
+    drawPlane(k,GY-120-Math.sin(G.t*.2)*10,Math.min(1.3,VW/560),-.06,true);
+    ctx.fillStyle='rgba(4,6,16,.25)';ctx.fillRect(0,0,VW,VH);
+    return;
+  }
   if(state==='win'||(state==='ending'&&G.endT>1.8)){
     drawEnding(state==='win'?G.winT+ (G.endT-1.8):G.endT-1.8);
     return;
@@ -917,6 +992,7 @@ let last=performance.now();
 function frame(now){
   let dt=clamp((now-last)/1000,0,.05);last=now;
   if(state==='play'){update(dt);hud();}
+  else if(state==='menu'){G.t+=dt;G.dist+=50*dt;}
   else if(state==='title'){G.t+=dt;G.dist+=60*dt;G.momRun+=dt*6;G.p.run+=dt*8;
     if(!G.bub.mom&&Math.random()<dt*.6)say('mom',pick(MOM_LINES),1.6);
     if(!G.bub.hero&&Math.random()<dt*.4)say('hero',pick(HERO_LINES),1.4);
