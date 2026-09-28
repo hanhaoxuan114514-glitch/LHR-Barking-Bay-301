@@ -6,7 +6,7 @@
 
 一个拍机佬和他妈斗智斗勇的小游戏
 
-[**▶ 开始游戏 Play**](https://hanhaoxuan114514-glitch.github.io/LHR-GAME/) &nbsp;·&nbsp; [版本记录 Releases](https://github.com/hanhaoxuan114514-glitch/LHR-GAME/releases)
+[**开始游戏 Play**](https://hanhaoxuan114514-glitch.github.io/LHR-GAME/) &nbsp;·&nbsp; [版本记录 Releases](https://github.com/hanhaoxuan114514-glitch/LHR-GAME/releases)
 
 </div>
 
