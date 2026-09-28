@@ -73,6 +73,32 @@ body{font-family:var(--body);color:var(--ink);-webkit-user-select:none;user-sele
 @media (max-width:520px){.bhead,.brow{grid-template-columns:62px 1fr 76px;gap:8px;padding:10px 12px}.fl{font-size:13px}.dest b{font-size:15px}.st{font-size:10.5px}}
 @media (prefers-reduced-motion:reduce){.st.ok i{animation:none}}
 
+/* account + leaderboard */
+.menu{justify-content:flex-start}
+.fidsbox{margin-block:auto}
+.toprow{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.acct{display:flex;align-items:center;gap:8px;font:700 12px "JetBrains Mono",monospace;color:rgba(255,255,255,.8)}
+.acct b{color:#ffd200;font-family:var(--body);font-weight:900}
+.linkbtn{appearance:none;border:1.5px solid rgba(255,210,0,.6);background:rgba(255,210,0,.08);color:#ffd200;font:900 12px var(--body);border-radius:999px;padding:4px 12px;cursor:pointer}
+.linkbtn:hover{background:rgba(255,210,0,.2)}
+.lbh{grid-template-columns:1fr auto}
+.live{font:700 11px "JetBrains Mono",monospace}
+.live i{display:inline-block;width:7px;height:7px;border-radius:50%;background:#e0142b;margin-right:6px;vertical-align:1px;animation:blink 1.2s infinite}
+.lblist{list-style:none;margin:0;padding:0;counter-reset:r}
+.lblist li{display:grid;grid-template-columns:44px 1fr auto auto;gap:12px;align-items:center;padding:8px 16px;border-top:1px solid #222;color:#eee;font-size:14px}
+.lblist li .rk{font:700 14px "JetBrains Mono",monospace;color:#8a8a96}
+.lblist li:nth-child(1) .rk{color:#ffd200}.lblist li:nth-child(2) .rk{color:#d8d8e0}.lblist li:nth-child(3) .rk{color:#e0a060}
+.lblist li .nm{font-weight:900;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.lblist li .tm{font:700 14px "JetBrains Mono",monospace;color:#35e06a;font-variant-numeric:tabular-nums}
+.lblist li .ex{font:700 11px "JetBrains Mono",monospace;color:#77778a}
+.lblist li.me{background:rgba(255,210,0,.1)}
+.lblist li.lbempty{display:block;color:#8a8a96;font-size:13px}
+.field{display:flex;flex-direction:column;gap:4px;font-size:12px;font-weight:900;color:var(--muted)}
+.field input{font:500 16px var(--body);padding:9px 10px;border:2.5px solid var(--line);border-radius:10px;background:#fff;color:var(--ink);-webkit-user-select:text;user-select:text}
+.field input:focus{outline:3px solid var(--gold);outline-offset:1px}
+.net{font-size:13px;font-weight:900;color:var(--ink)}
+@media (max-width:520px){.lblist li{grid-template-columns:34px 1fr auto;padding:8px 12px}.lblist li .ex{display:none}}
+
 /* touch zones */
 #touch{position:absolute;left:0;right:0;bottom:0;display:none;justify-content:space-between;padding:0 14px calc(env(safe-area-inset-bottom,0px) + 14px);pointer-events:none}
 #touch span{font-family:var(--display);font-size:22px;color:#fff;background:rgba(20,16,16,.35);border:2px dashed rgba(255,255,255,.6);border-radius:14px;padding:10px 18px}
@@ -143,7 +169,7 @@ h2{margin:0;font-family:var(--display);font-weight:400;font-size:clamp(34px,9vw,
   <!-- main menu -->
   <div class="screen menu" id="sMenu">
     <div class="fidsbox">
-      <div class="eyebrow">LHR · EGLL · 51°28′N 000°27′W</div>
+      <div class="toprow"><div class="eyebrow">LHR · EGLL · 51°28′N 000°27′W</div><div class="acct"><span id="acctName">未登录</span><button class="linkbtn" id="bLogin">登录 Sign in</button></div></div>
       <div class="mt">
         <h1 class="mt-cn"><span style="display:inline-block">伦敦希思罗</span><span style="display:inline-block">机场传奇</span></h1>
         <div class="mt-en">London Heathrow Airport Legend</div>
@@ -154,6 +180,10 @@ h2{margin:0;font-family:var(--display);font-weight:400;font-size:clamp(34px,9vw,
         <button class="brow" id="bCh1"><span class="fl">LHR301</span><span class="dest"><b>ZRH快跑 <em class="tag">跑酷 RUNNER</em></b><small>Run, ZRH! 躲开老妈，冲向 301 机坪</small></span><span class="st ok"><i></i>登机 BOARDING</span></button>
         <button class="brow" disabled><span class="fl">LHR302</span><span class="dest"><b>新游戏 · 敬请期待</b><small>New game · Coming soon</small></span><span class="st dl">延误 DELAYED</span></button>
         <button class="brow" disabled><span class="fl">LHR303</span><span class="dest"><b>新游戏 · 敬请期待</b><small>New game · Coming soon</small></span><span class="st dl">待定 TBA</span></button>
+      </div>
+      <div class="board lb">
+        <div class="bhead lbh"><span>排行榜 LEADERBOARD · ZRH快跑</span><span class="live"><i></i>实时 LIVE</span></div>
+        <ol class="lblist" id="lbList"><li class="lbempty">加载中…</li></ol>
       </div>
       <div class="mfoot"><span id="mBest">最快纪录 BEST —</span><span>选择航班开始游戏 · PICK A FLIGHT TO PLAY</span></div>
     </div>
@@ -221,8 +251,21 @@ h2{margin:0;font-family:var(--display);font-weight:400;font-size:clamp(34px,9vw,
         <div><b id="wHit">0</b><span>挨拖鞋/摔跤</span></div>
       </div>
       <div class="best" id="wBest"></div>
+      <div class="net" id="wNet"></div>
       <div class="row"><button class="go" id="bAgain">再跑一次</button><button class="go alt" data-share="win">分享战绩</button></div>
       <button class="back" id="bMenu3">← 返回航班列表 All games</button>
+    </div>
+  </div>
+
+  <div class="screen" id="sLogin" hidden>
+    <div class="card">
+      <div class="kicker">值机 CHECK-IN</div>
+      <h2>登录上榜</h2>
+      <p class="story">填好昵称和邮箱，我们会发一封登录邮件。点邮件里的链接就能登录，不需要密码。</p>
+      <label class="field">昵称 Nickname<input id="inNick" maxlength="16" autocomplete="nickname" placeholder="排行榜上显示的名字"></label>
+      <label class="field">邮箱 Email<input id="inMail" type="email" autocomplete="email" placeholder="you@example.com"></label>
+      <div class="net" id="loginMsg"></div>
+      <div class="row"><button class="go" id="bSend">发送登录邮件</button><button class="go alt" id="bLoginClose">返回</button></div>
     </div>
   </div>
 
@@ -237,6 +280,7 @@ h2{margin:0;font-family:var(--display);font-weight:400;font-size:clamp(34px,9vw,
   <div id="toast"></div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
 <script>
 'use strict';
 const $=id=>document.getElementById(id);
@@ -331,7 +375,7 @@ function showBest(){ $('bestT').textContent=best?`你的最快纪录：${best.to
 showBest();
 
 /* ---------- screens ---------- */
-const screens=['sMenu','sTitle','sPause','sOver','sWin','sShare'];
+const screens=['sMenu','sLogin','sTitle','sPause','sOver','sWin','sShare'];
 function show(id){screens.forEach(s=>$(s).hidden=(s!==id));}
 function setState(s){
   state=s;
@@ -391,6 +435,7 @@ function slide(){
   else if(p.slide<=0){p.slide=.62;SFX.slide();dust(PX-10,GY,8);}
 }
 addEventListener('keydown',e=>{
+  if(e.target&&e.target.tagName==='INPUT')return;
   const k=e.code;
   if(['Space','ArrowUp','ArrowDown','KeyW','KeyS'].includes(k))e.preventDefault();
   if(state==='menu'&&k==='Enter'){toTitle();return;}
@@ -1021,7 +1066,92 @@ function winScreen(){
   $('wBest').textContent=nb?'新纪录！':`最快纪录：${best.toFixed(1)} 秒`;
   showBest();
   show('sWin');
+  submitScore();
 }
 requestAnimationFrame(frame);
+
+/* ---------- online: login + live leaderboard ---------- */
+const SB_URL='https://vmglldxyaolhecraghel.supabase.co';
+const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZtZ2xsZHh5YW9saGVjcmFnaGVsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA2MDc3MTUsImV4cCI6MjEwNjE4MzcxNX0.3NYsCktuiWYDp7rG_IqQHEz2qEDGxAKMJ67Z31mJ9c0';
+const GAME='zrh-run';
+let sb=null,user=null,nick='',loginFrom='sMenu';
+const lsGet=k=>{try{return localStorage.getItem(k)}catch(e){return null}};
+const lsSet=(k,v)=>{try{localStorage.setItem(k,v)}catch(e){}};
+try{if(window.supabase)sb=window.supabase.createClient(SB_URL,SB_KEY,{auth:{persistSession:true,detectSessionInUrl:true}});}catch(e){sb=null;}
+
+function openLogin(from){loginFrom=from;$('loginMsg').textContent='';$('inNick').value=nick||lsGet('zrh_nick')||'';show('sLogin');}
+$('bLoginClose').onclick=()=>show(loginFrom);
+$('bLogin').onclick=async()=>{
+  if(!sb)return;
+  if(user){await sb.auth.signOut();toast('已退出登录');}
+  else openLogin('sMenu');
+};
+$('bSend').onclick=async()=>{
+  const n=$('inNick').value.trim(),m=$('inMail').value.trim(),msg=$('loginMsg');
+  if(!n){msg.textContent='请填写昵称';return;}
+  if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(m)){msg.textContent='邮箱格式不对，再检查一下';return;}
+  lsSet('zrh_nick',n.slice(0,16));
+  msg.textContent='发送中…';$('bSend').disabled=true;
+  const {error}=await sb.auth.signInWithOtp({email:m,options:{emailRedirectTo:location.origin+location.pathname,data:{nickname:n.slice(0,16)}}});
+  $('bSend').disabled=false;
+  msg.textContent=error?('发送失败：'+(/rate/i.test(error.message)?'发送太频繁，请过一会儿再试':error.message)):'已发送！去邮箱点登录链接（没收到的话看看垃圾邮件）。';
+};
+
+async function setUser(u){
+  user=u||null;
+  if(user){
+    const pending=lsGet('zrh_nick');
+    nick=(user.user_metadata&&user.user_metadata.nickname)||pending||user.email.split('@')[0];
+    if(pending&&pending!==nick){nick=pending;}
+    if(!user.user_metadata||user.user_metadata.nickname!==nick){try{await sb.auth.updateUser({data:{nickname:nick}});}catch(e){}}
+    $('acctName').innerHTML='';const b=document.createElement('b');b.textContent=nick;$('acctName').append(b);
+    $('bLogin').textContent='退出 Sign out';
+    if(state==='menu'||$('sLogin').hidden===false){ if(!$('sLogin').hidden)show(loginFrom); }
+  }else{
+    nick='';$('acctName').textContent='未登录';$('bLogin').textContent='登录 Sign in';
+  }
+  loadLB();
+}
+
+async function loadLB(){
+  if(!sb)return;
+  const {data,error}=await sb.from('leaderboard').select('user_id,nickname,time_s,cams,hits').eq('game',GAME).order('time_s',{ascending:true}).limit(10);
+  const ol=$('lbList');ol.innerHTML='';
+  if(error||!data){const li=document.createElement('li');li.className='lbempty';li.textContent='排行榜暂时连不上';ol.append(li);return;}
+  if(!data.length){const li=document.createElement('li');li.className='lbempty';li.textContent='还没有人上榜，来当第一个吧';ol.append(li);return;}
+  data.forEach((r,i)=>{
+    const li=document.createElement('li');if(user&&r.user_id===user.id)li.className='me';
+    const mk=(c,t)=>{const s=document.createElement('span');s.className=c;s.textContent=t;return s;};
+    li.append(mk('rk',String(i+1).padStart(2,'0')),mk('nm',r.nickname),mk('ex',`${r.cams}机 · ${r.hits}鞋`),mk('tm',Number(r.time_s).toFixed(2)+'s'));
+    ol.append(li);
+  });
+}
+
+async function submitScore(){
+  const el=$('wNet');el.textContent='';
+  if(!sb)return;
+  if(!user){
+    el.textContent='登录后成绩可以上排行榜 ';
+    const b=document.createElement('button');b.className='linkbtn';b.style.color='var(--red)';b.style.borderColor='var(--red)';b.textContent='登录上榜';
+    b.onclick=()=>openLogin('sWin');el.append(b);return;
+  }
+  el.textContent='上传成绩中…';
+  const t=Math.round(G.winTime*100)/100;
+  const {error}=await sb.from('scores').insert({nickname:nick.slice(0,16),game:GAME,time_s:t,cams:G.cams,hits:G.hits});
+  if(error){el.textContent=/check/i.test(error.message)?'这个成绩太离谱了，没有上传':'上传失败：'+error.message;return;}
+  const mine=await sb.from('leaderboard').select('time_s').eq('game',GAME).eq('user_id',user.id).maybeSingle();
+  const best=mine.data?Number(mine.data.time_s):t;
+  const ahead=await sb.from('leaderboard').select('user_id',{count:'exact',head:true}).eq('game',GAME).lt('time_s',best);
+  el.textContent=`已上传！你的最好成绩 ${best.toFixed(2)} 秒，当前排名第 ${(ahead.count||0)+1} 名`;
+}
+
+(async()=>{
+  if(!sb){$('acctName').textContent='排行榜暂不可用';$('bLogin').hidden=true;const ol=$('lbList');ol.innerHTML='<li class="lbempty">排行榜暂时连不上</li>';return;}
+  const {data}=await sb.auth.getSession();
+  if(location.hash.includes('access_token'))history.replaceState(null,'',location.pathname+location.search);
+  await setUser(data.session&&data.session.user);
+  sb.auth.onAuthStateChange((_e,s)=>{const u=s&&s.user;if((u&&u.id)!==(user&&user.id))setUser(u);});
+  sb.channel('lb').on('postgres_changes',{event:'INSERT',schema:'public',table:'scores'},()=>loadLB()).subscribe();
+})();
 </script>
 </html>
