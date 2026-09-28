@@ -63,6 +63,7 @@ body{font-family:var(--body);color:var(--ink);-webkit-user-select:none;user-sele
 .brow:disabled{cursor:default;opacity:.55}
 .fl{font:700 15px "JetBrains Mono",monospace;color:#ffd200;letter-spacing:.04em}
 .dest b{display:block;font-size:17px;font-weight:900}
+.tag{font-style:normal;font:700 10px "JetBrains Mono",monospace;color:#111;background:#ffd200;border-radius:4px;padding:1px 6px;margin-left:6px;vertical-align:2px;letter-spacing:.04em}
 .dest small{display:block;font-size:12px;color:#9a9aa6;margin-top:2px}
 .st{font:700 12px "JetBrains Mono",monospace;letter-spacing:.06em}
 .st.ok{color:#35e06a}.st.ok i{display:inline-block;width:7px;height:7px;border-radius:50%;background:#35e06a;margin-right:6px;vertical-align:1px;animation:blink 1s infinite}
@@ -146,22 +147,22 @@ h2{margin:0;font-family:var(--display);font-weight:400;font-size:clamp(34px,9vw,
       <div class="mt">
         <h1 class="mt-cn"><span style="display:inline-block">伦敦希思罗</span><span style="display:inline-block">机场传奇</span></h1>
         <div class="mt-en">London Heathrow Airport Legend</div>
-        <div class="mt-sub">一个拍机佬的传奇 · The legend of a planespotter</div>
+        <div class="mt-sub">希思罗拍机小游戏合集 · 每一班航班都是一个独立的小游戏<br>A collection of planespotting mini-games</div>
       </div>
       <div class="board" role="list">
-        <div class="bhead"><span>航班 FLIGHT</span><span>章节 CHAPTER</span><span>状态 STATUS</span></div>
-        <button class="brow" id="bCh1"><span class="fl">LHR301</span><span class="dest"><b>第一章 · ZRH快跑</b><small>Chapter 1 · Run, ZRH! 逃出301室，冲向301机坪</small></span><span class="st ok"><i></i>登机 BOARDING</span></button>
-        <button class="brow" disabled><span class="fl">LHR302</span><span class="dest"><b>第二章 · 敬请期待</b><small>Chapter 2 · Coming soon</small></span><span class="st dl">延误 DELAYED</span></button>
-        <button class="brow" disabled><span class="fl">LHR303</span><span class="dest"><b>第三章 · 敬请期待</b><small>Chapter 3 · Coming soon</small></span><span class="st dl">待定 TBA</span></button>
+        <div class="bhead"><span>航班 FLIGHT</span><span>游戏 GAME</span><span>状态 STATUS</span></div>
+        <button class="brow" id="bCh1"><span class="fl">LHR301</span><span class="dest"><b>ZRH快跑 <em class="tag">跑酷 RUNNER</em></b><small>Run, ZRH! 躲开老妈，冲向 301 机坪</small></span><span class="st ok"><i></i>登机 BOARDING</span></button>
+        <button class="brow" disabled><span class="fl">LHR302</span><span class="dest"><b>新游戏 · 敬请期待</b><small>New game · Coming soon</small></span><span class="st dl">延误 DELAYED</span></button>
+        <button class="brow" disabled><span class="fl">LHR303</span><span class="dest"><b>新游戏 · 敬请期待</b><small>New game · Coming soon</small></span><span class="st dl">待定 TBA</span></button>
       </div>
-      <div class="mfoot"><span id="mBest">最快纪录 BEST —</span><span>点击航班进入 · TAP A FLIGHT TO BOARD</span></div>
+      <div class="mfoot"><span id="mBest">最快纪录 BEST —</span><span>选择航班开始游戏 · PICK A FLIGHT TO PLAY</span></div>
     </div>
   </div>
 
   <!-- title -->
   <div class="screen" id="sTitle" hidden>
     <div class="card">
-      <button class="back" id="bMenu1">← 返回主界面 Main menu</button>
+      <button class="back" id="bMenu1">← 返回航班列表 All games</button>
       <div class="kicker">一个拍机佬的逃亡</div>
       <h1>ZRH快跑！<small>目标：301 机坪</small></h1>
       <div class="panels">
@@ -203,7 +204,7 @@ h2{margin:0;font-family:var(--display);font-weight:400;font-size:clamp(34px,9vw,
         <div><b id="oCam">0</b><span>捡到器材</span></div>
       </div>
       <div class="row"><button class="go" id="bRetry">再跑一次</button><button class="go alt" data-share="over">分享</button></div>
-      <button class="back" id="bMenu2">← 返回主界面 Main menu</button>
+      <button class="back" id="bMenu2">← 返回航班列表 All games</button>
     </div>
   </div>
 
@@ -221,7 +222,7 @@ h2{margin:0;font-family:var(--display);font-weight:400;font-size:clamp(34px,9vw,
       </div>
       <div class="best" id="wBest"></div>
       <div class="row"><button class="go" id="bAgain">再跑一次</button><button class="go alt" data-share="win">分享战绩</button></div>
-      <button class="back" id="bMenu3">← 返回主界面 Main menu</button>
+      <button class="back" id="bMenu3">← 返回航班列表 All games</button>
     </div>
   </div>
 
