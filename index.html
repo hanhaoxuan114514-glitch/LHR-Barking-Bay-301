@@ -169,7 +169,7 @@ h2{margin:0;font-family:var(--display);font-weight:400;font-size:clamp(34px,9vw,
   <!-- main menu -->
   <div class="screen menu" id="sMenu">
     <div class="fidsbox">
-      <div class="toprow"><div class="eyebrow">LHR · EGLL · 51°28′N 000°27′W</div><div class="acct"><span id="acctName">未登录</span><button class="linkbtn" id="bLogin">登录 Sign in</button></div></div>
+      <div class="toprow"><div class="eyebrow">LHR · EGLL · 51°28′N 000°27′W</div><div class="acct"><span id="acctName">未登录</span><button class="linkbtn" id="bPw" hidden>设置密码</button><button class="linkbtn" id="bLogin">登录 Sign in</button></div></div>
       <div class="mt">
         <h1 class="mt-cn"><span style="display:inline-block">伦敦希思罗</span><span style="display:inline-block">机场传奇</span></h1>
         <div class="mt-en">London Heathrow Airport Legend</div>
@@ -263,7 +263,7 @@ h2{margin:0;font-family:var(--display);font-weight:400;font-size:clamp(34px,9vw,
       <h2 id="loginTitle">登录上榜</h2>
       <p class="story" id="loginHint">用邮箱和密码登录。第一次来？点下面的「注册新账号」。</p>
       <label class="field" id="nickField" hidden>昵称 Nickname<input id="inNick" maxlength="16" autocomplete="nickname" placeholder="排行榜上显示的名字"></label>
-      <label class="field">邮箱 Email<input id="inMail" type="email" autocomplete="email" placeholder="you@example.com"></label>
+      <label class="field" id="mailField">邮箱 Email<input id="inMail" type="email" autocomplete="email" placeholder="you@example.com"></label>
       <label class="field">密码 Password<input id="inPass" type="password" autocomplete="current-password" placeholder="至少 6 位"></label>
       <div class="net" id="loginMsg"></div>
       <div class="row"><button class="go" id="bSend">登录</button><button class="go alt" id="bLoginClose">返回</button></div>
@@ -1088,15 +1088,19 @@ $('bLogin').onclick=async()=>{
   if(user){await sb.auth.signOut();toast('已退出登录');}
   else openLogin('sMenu');
 };
-let signup=false;
-function setMode(m){signup=m;$('nickField').hidden=!m;$('loginTitle').textContent=m?'注册账号':'登录上榜';
+let signup=false,pwMode=false;
+function setMode(m){signup=m;pwMode=false;$('mailField').hidden=false;$('bMode').hidden=false;$('nickField').hidden=!m;$('loginTitle').textContent=m?'注册账号':'登录上榜';
   $('loginHint').textContent=m?'取一个昵称，填邮箱和密码就能注册，马上可以上榜。':'用邮箱和密码登录。第一次来？点下面的「注册新账号」。';
   $('bSend').textContent=m?'注册并登录':'登录';$('bMode').textContent=m?'已有账号？直接登录':'没有账号？注册新账号';
   $('inPass').autocomplete=m?'new-password':'current-password';$('loginMsg').textContent='';}
 $('bMode').onclick=()=>setMode(!signup);
+$('bPw').onclick=()=>{loginFrom='sMenu';setMode(false);pwMode=true;$('mailField').hidden=true;$('bMode').hidden=true;
+  $('loginTitle').textContent='设置密码';$('loginHint').textContent='设一个新密码，以后在别的设备上用邮箱和这个密码登录。';$('bSend').textContent='保存密码';$('inPass').autocomplete='new-password';show('sLogin');};
 $('inPass').addEventListener('keydown',e=>{if(e.key==='Enter')$('bSend').click();});
 $('bSend').onclick=async()=>{
   const n=$('inNick').value.trim(),m=$('inMail').value.trim(),p=$('inPass').value,msg=$('loginMsg');
+  if(pwMode){if(p.length<6){msg.textContent='密码至少 6 位';return;}msg.textContent='保存中…';const {error}=await sb.auth.updateUser({password:p});
+    if(error){msg.textContent='出错了：'+error.message;return;}$('inPass').value='';toast('密码已保存');show(loginFrom);return;}
   if(signup&&!n){msg.textContent='请填写昵称';return;}
   if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(m)){msg.textContent='邮箱格式不对，再检查一下';return;}
   if(p.length<6){msg.textContent='密码至少 6 位';return;}
@@ -1120,10 +1124,10 @@ async function setUser(u){
     nick=(user.user_metadata&&user.user_metadata.nickname)||pending||user.email.split('@')[0];
     if(!user.user_metadata||user.user_metadata.nickname!==nick){try{await sb.auth.updateUser({data:{nickname:nick}});}catch(e){}}
     $('acctName').innerHTML='';const b=document.createElement('b');b.textContent=nick;$('acctName').append(b);
-    $('bLogin').textContent='退出 Sign out';
+    $('bLogin').textContent='退出 Sign out';$('bPw').hidden=false;
     if(state==='menu'||$('sLogin').hidden===false){ if(!$('sLogin').hidden)show(loginFrom); }
   }else{
-    nick='';$('acctName').textContent='未登录';$('bLogin').textContent='登录 Sign in';
+    nick='';$('acctName').textContent='未登录';$('bLogin').textContent='登录 Sign in';$('bPw').hidden=true;
   }
   loadLB();
 }
