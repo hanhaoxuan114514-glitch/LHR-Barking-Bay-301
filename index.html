@@ -61,6 +61,10 @@ body{font-family:var(--body);color:var(--ink);-webkit-user-select:none;user-sele
 .brow{border-top:1px solid #222;color:#f2f2f2;background:none;border-left:0;border-right:0;border-bottom:0;width:100%;text-align:left;font:inherit;cursor:pointer;transition:background .15s}
 .brow:hover:not(:disabled),.brow:focus-visible{background:#1b1b20;outline:none}
 .brow:disabled{cursor:default;opacity:.55}
+a.brow{text-decoration:none;box-sizing:border-box}
+.lbtabs{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.lbtab{appearance:none;border:1.5px solid #111;background:transparent;color:#111;font:900 11px var(--body);border-radius:999px;padding:1px 9px;cursor:pointer}
+.lbtab.on{background:#111;color:#ffd200}
 .fl{font:700 15px "JetBrains Mono",monospace;color:#ffd200;letter-spacing:.04em}
 .dest b{display:block;font-size:17px;font-weight:900}
 .tag{font-style:normal;font:700 10px "JetBrains Mono",monospace;color:#111;background:#ffd200;border-radius:4px;padding:1px 6px;margin-left:6px;vertical-align:2px;letter-spacing:.04em}
@@ -178,11 +182,11 @@ h2{margin:0;font-family:var(--display);font-weight:400;font-size:clamp(34px,9vw,
       <div class="board" role="list">
         <div class="bhead"><span>航班 FLIGHT</span><span>游戏 GAME</span><span>状态 STATUS</span></div>
         <button class="brow" id="bCh1"><span class="fl">LHR301</span><span class="dest"><b>ZRH快跑 <em class="tag">跑酷 RUNNER</em></b><small>Run, ZRH! 躲开老妈，冲向 301 机坪</small></span><span class="st ok"><i></i>登机 BOARDING</span></button>
-        <button class="brow" disabled><span class="fl">LHR302</span><span class="dest"><b>新游戏 · 敬请期待</b><small>New game · Coming soon</small></span><span class="st dl">延误 DELAYED</span></button>
+        <a class="brow" id="bCh2" href="lhr302.html"><span class="fl">LHR302</span><span class="dest"><b>T3 夜行 <em class="tag">潜行 STEALTH</em></b><small>Short Stay 3 · 溜过 T3 停车楼顶层，躲开 security</small></span><span class="st ok"><i></i>登机 BOARDING</span></a>
         <button class="brow" disabled><span class="fl">LHR303</span><span class="dest"><b>新游戏 · 敬请期待</b><small>New game · Coming soon</small></span><span class="st dl">待定 TBA</span></button>
       </div>
       <div class="board lb">
-        <div class="bhead lbh"><span>排行榜 LEADERBOARD · ZRH快跑</span><span class="live"><i></i>实时 LIVE</span></div>
+        <div class="bhead lbh"><span class="lbtabs">排行榜 <button class="lbtab on" data-g="zrh-run">ZRH快跑</button><button class="lbtab" data-g="lhr302-t3">T3 夜行</button></span><span class="live"><i></i>实时 LIVE</span></div>
         <ol class="lblist" id="lbList"><li class="lbempty">加载中…</li></ol>
       </div>
       <div class="mfoot"><span id="mBest">最快纪录 BEST —</span><span>选择航班开始游戏 · PICK A FLIGHT TO PLAY</span></div>
@@ -1079,6 +1083,7 @@ const GAME='zrh-run';
 let sb=null,user=null,nick='',loginFrom='sMenu';
 const lsGet=k=>{try{return localStorage.getItem(k)}catch(e){return null}};
 const lsSet=(k,v)=>{try{localStorage.setItem(k,v)}catch(e){}};
+let lbGame=lsGet('lhr_lb')||GAME;
 try{if(window.supabase)sb=window.supabase.createClient(SB_URL,SB_KEY,{auth:{persistSession:true,detectSessionInUrl:true}});}catch(e){sb=null;}
 
 function openLogin(from){loginFrom=from;setMode(false);$('inNick').value=nick||lsGet('zrh_nick')||'';show('sLogin');}
@@ -1132,16 +1137,18 @@ async function setUser(u){
   loadLB();
 }
 
+document.querySelectorAll('.lbtab').forEach(b=>{b.classList.toggle('on',b.dataset.g===lbGame);b.onclick=()=>{lbGame=b.dataset.g;lsSet('lhr_lb',lbGame);document.querySelectorAll('.lbtab').forEach(x=>x.classList.toggle('on',x===b));loadLB();};});
 async function loadLB(){
   if(!sb)return;
-  const {data,error}=await sb.from('leaderboard').select('user_id,nickname,time_s,cams,hits').eq('game',GAME).order('time_s',{ascending:true}).limit(10);
+  const g=lbGame;const {data,error}=await sb.from('leaderboard').select('user_id,nickname,time_s,cams,hits').eq('game',g).order('time_s',{ascending:true}).limit(10);
+  if(g!==lbGame)return;
   const ol=$('lbList');ol.innerHTML='';
   if(error||!data){const li=document.createElement('li');li.className='lbempty';li.textContent='排行榜暂时连不上';ol.append(li);return;}
   if(!data.length){const li=document.createElement('li');li.className='lbempty';li.textContent='还没有人上榜，来当第一个吧';ol.append(li);return;}
   data.forEach((r,i)=>{
     const li=document.createElement('li');if(user&&r.user_id===user.id)li.className='me';
     const mk=(c,t)=>{const s=document.createElement('span');s.className=c;s.textContent=t;return s;};
-    li.append(mk('rk',String(i+1).padStart(2,'0')),mk('nm',r.nickname),mk('ex',`${r.cams}机 · ${r.hits}鞋`),mk('tm',Number(r.time_s).toFixed(2)+'s'));
+    li.append(mk('rk',String(i+1).padStart(2,'0')),mk('nm',r.nickname),mk('ex',g==='lhr302-t3'?`${r.cams}牌 · 被发现${r.hits}次`:`${r.cams}机 · ${r.hits}鞋`),mk('tm',Number(r.time_s).toFixed(2)+'s'));
     ol.append(li);
   });
 }
