@@ -1,5 +1,5 @@
 <!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
-<title>T3 夜行 · 希思罗机场传奇</title>
+<title>T2 夜行 · 希思罗机场传奇</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=ZCOOL+QingKe+HuangYou&family=Bebas+Neue&family=JetBrains+Mono:wght@700&family=Noto+Sans+SC:wght@500;900&display=swap">
 <style>
@@ -51,7 +51,11 @@ body{font-family:var(--body);color:var(--ink);-webkit-user-select:none;user-sele
 
 /* touch */
 #touch{position:absolute;inset:0;pointer-events:none;display:none}
-@media (pointer:coarse){ body.playing #touch{display:block} }
+body.touch.playing #touch{display:block}
+body.touch .kb{display:none}
+body:not(.touch) .tc{display:none}
+#joyBase.run{border-color:#ffd200;border-style:solid;background:rgba(255,210,0,.15)}
+#joyBase.run #joyKnob{background:#ffd200}
 #joy{position:absolute;left:0;top:0;bottom:0;width:55%;pointer-events:auto}
 #joyBase{position:absolute;width:120px;height:120px;border-radius:50%;border:2px dashed rgba(255,255,255,.55);background:rgba(10,12,26,.25);transform:translate(-50%,-50%);display:none}
 #joyKnob{position:absolute;left:50%;top:50%;width:52px;height:52px;margin:-26px 0 0 -26px;border-radius:50%;background:rgba(47,211,192,.85);border:2px solid #fff}
@@ -94,6 +98,14 @@ h2{margin:0;font-family:var(--display);font-weight:400;font-size:clamp(34px,9vw,
 .field{display:flex;flex-direction:column;gap:4px;font-size:12px;font-weight:900;color:var(--muted)}
 .field input{font:500 16px var(--body);padding:9px 10px;border:2.5px solid var(--line);border-radius:10px;background:#fff;color:var(--ink);-webkit-user-select:text;user-select:text}
 .perkline{font-size:12.5px;font-weight:900;color:var(--ink);background:#ffe9a8;border:2px solid var(--line);border-radius:10px;padding:5px 10px}
+.gm{position:absolute;left:0;top:0;width:38px;height:7px;border-radius:5px;background:rgba(0,0,0,.6);border:1.5px solid #fff;overflow:hidden;pointer-events:none}
+.gm i{display:block;height:100%;width:0;background:#ffd200}
+.gm.hot i{background:#ff7a1a}
+#banner{position:absolute;left:50%;top:26%;transform:translate(-50%,-50%) scale(.9);font:400 clamp(30px,7vw,54px) var(--display);color:#fff;letter-spacing:.06em;text-shadow:0 4px 0 #000,0 0 30px rgba(255,210,0,.5);-webkit-text-stroke:1.5px #000;pointer-events:none;opacity:0;transition:opacity .25s,transform .25s;white-space:nowrap;text-align:center}
+#banner small{display:block;font:900 14px var(--body);-webkit-text-stroke:0;color:#ffd200;letter-spacing:.1em;margin-top:4px}
+#banner.on{opacity:1;transform:translate(-50%,-50%) scale(1)}
+body.touch .btn-ic{width:40px;height:40px}
+@media (max-width:620px){.stat{font-size:11.5px;padding:3px 8px}.dbar{width:58px}.hrow{gap:6px}}
 #toast{position:absolute;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 28px);transform:translateX(-50%);background:var(--ink);color:#fff;padding:8px 16px;border-radius:999px;font-weight:900;font-size:14px;pointer-events:none;opacity:0;transition:opacity .2s;white-space:nowrap}
 #toast.on{opacity:1}
 
@@ -120,7 +132,8 @@ h2{margin:0;font-family:var(--display);font-weight:400;font-size:clamp(34px,9vw,
 .vnext{position:absolute;right:16px;bottom:10px;font-size:14px;color:var(--red);animation:bob .8s infinite alternate}
 @keyframes bob{to{transform:translateY(4px)}}
 .vtop{position:absolute;right:14px;top:calc(env(safe-area-inset-top,0px) + 12px);display:flex;gap:8px;pointer-events:auto}
-.vtop button{appearance:none;border:1.5px solid rgba(255,255,255,.4);background:rgba(10,12,26,.6);color:#fff;font:900 12px var(--body);border-radius:999px;padding:5px 12px;cursor:pointer}
+.vtop button{appearance:none;border:2px solid var(--line);background:#ffd200;color:var(--ink);font:900 14px var(--body);border-radius:999px;padding:7px 16px;cursor:pointer;box-shadow:3px 3px 0 var(--line)}
+.vtop button:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--line)}
 .vtime{position:absolute;left:14px;top:calc(env(safe-area-inset-top,0px) + 12px);font:700 12px var(--mono);color:#ffd200;letter-spacing:.14em;background:rgba(10,12,26,.6);border-radius:999px;padding:5px 12px}
 .choices{position:absolute;left:50%;top:44%;transform:translate(-50%,-50%);display:flex;flex-direction:column;gap:10px;width:min(560px,calc(100% - 32px));pointer-events:auto}
 .choices button{appearance:none;text-align:left;border:3px solid var(--line);background:var(--paper);color:var(--ink);border-radius:14px;box-shadow:4px 4px 0 var(--line);padding:10px 14px;font:900 16px var(--body);cursor:pointer}
@@ -135,6 +148,7 @@ h2{margin:0;font-family:var(--display);font-weight:400;font-size:clamp(34px,9vw,
   <div id="gl"></div>
   <div id="vign"></div>
   <div id="bubbles"></div>
+  <div id="banner"></div>
 
   <div id="hud" hidden>
     <div class="hrow">
@@ -145,7 +159,8 @@ h2{margin:0;font-family:var(--display);font-weight:400;font-size:clamp(34px,9vw,
       <button class="btn-ic" id="bPause" aria-label="暂停">❚❚</button>
     </div>
     <div class="hrow">
-      <div class="stam"><span class="stat">体力</span><div class="dbar"><div class="dfill" id="stFill"></div></div></div>
+      <span class="stat" id="hState">🟢 隐蔽</span>
+      <div class="stam"><span class="stat">⚡</span><div class="dbar"><div class="dfill" id="stFill"></div></div></div>
       <span class="stat" id="hCan">🥫 0</span>
       <span class="stat" id="hTag">🏷 0/3</span>
       <span class="stat" id="hSpot">👁 0</span>
@@ -153,41 +168,45 @@ h2{margin:0;font-family:var(--display);font-weight:400;font-size:clamp(34px,9vw,
   </div>
   <canvas id="mini" width="400" height="232" hidden aria-label="小地图"></canvas>
 
-  <div id="phone"><img id="phImg" alt=""><div><b id="phName">苏芮</b><span id="phText"></span></div></div>
+  <div id="phone"><img id="phImg" alt=""><div><b id="phName">ZRH</b><span id="phText"></span></div></div>
 
   <div id="touch">
     <div id="joy"><div id="joyBase"><div id="joyKnob"></div></div></div>
-    <div id="joyHint">← 左侧拖动移动</div>
+    <div id="joyHint">← 左半屏按住拖动移动 · 推到底冲刺</div>
     <button class="tbtn" id="tSprint">冲刺</button>
     <button class="tbtn" id="tThrow">扔罐</button>
   </div>
 
-  <div class="screen" id="sLoad"><div class="t">T3 夜行</div><div class="s" id="loadMsg">LOADING · 正在加载停车楼…</div></div>
+  <div class="screen" id="sLoad"><div class="t">T2 夜行</div><div class="s" id="loadMsg">LOADING · 正在加载停车楼…</div></div>
 
   <div class="screen" id="sTitle" hidden>
     <div class="card">
       <a class="back" href="./">← 返回航班列表 All games</a>
-      <div class="kicker">LHR302 · 3 号航站楼 · 顶层停车场</div>
-      <h1>T3 夜行<small>Short Stay 3 · 潜入停车楼顶层</small></h1>
-      <p class="story">伦敦的第一晚，来接机的学姐苏芮被 security 赶出了停车楼顶层，她的相机包还落在里面。从航站楼出口溜上楼顶，找到相机包，再避开巡逻的 security，赶到左上角的车辆入口坡道和她会合。</p>
+      <div class="kicker">LHR302 · 2 号航站楼 · 顶层停车场</div>
+      <h1>T2 夜行<small>Terminal 2 · 潜入停车楼顶层</small></h1>
+      <p class="story">STEVEN 第一次来伦敦。来接机的姐姐 ZRH 被 security 赶出了停车楼顶层，她的相机包还落在里面。从航站楼出口溜上楼顶，找到相机包，再避开巡逻的 security，赶到左上角的车辆入口坡道和她会合。</p>
       <dl class="keys">
-        <dt><span class="kbd">W</span><span class="kbd">A</span><span class="kbd">S</span><span class="kbd">D</span> / 方向键</dt><dd>移动</dd>
-        <dt><span class="kbd">Shift</span></dt><dd>冲刺：更快，但有脚步声，会耗体力</dd>
-        <dt><span class="kbd">E</span> / <span class="kbd">空格</span></dt><dd>往前扔易拉罐，把 security 引过去</dd>
-        <dt><span class="kbd">M</span></dt><dd>俯瞰整个停车楼</dd>
-        <dt>手机</dt><dd>左边拖动移动，右下角冲刺 / 扔罐</dd>
+        <dt class="kb"><span class="kbd">W</span><span class="kbd">A</span><span class="kbd">S</span><span class="kbd">D</span> / 方向键</dt><dd class="kb">移动</dd>
+        <dt class="kb"><span class="kbd">Shift</span></dt><dd class="kb">冲刺：更快，但有脚步声，会耗体力</dd>
+        <dt class="kb"><span class="kbd">E</span> / <span class="kbd">空格</span></dt><dd class="kb">往前扔易拉罐（地上的黄圈是落点），把 security 引过去</dd>
+        <dt class="kb"><span class="kbd">M</span></dt><dd class="kb">俯瞰整个停车楼</dd>
+        <dt class="tc">🕹 左半屏</dt><dd class="tc">按住拖动移动，推到底自动冲刺</dd>
+        <dt class="tc">右下按钮</dt><dd class="tc">「冲刺」按住加速，「扔罐」往前扔易拉罐</dd>
+        <dt class="tc">🗺</dt><dd class="tc">右上角按钮：俯瞰整个停车楼</dd>
         <dt>👁</dt><dd>红色扇形是 security 的视野，车和立柱能挡住视线</dd>
+        <dt>🟨</dt><dd>security 头顶的黄条满了就会来追你，躲进掩护让它降下去</dd>
       </dl>
       <div class="perkline" id="perkLine" hidden></div>
       <div class="row"><button class="go" id="bStart">出发！</button></div>
+      <div class="best">每次出发前都会播放开场剧情，随时可以点右上角「跳过剧情」。</div>
       <div class="best" id="bestT"></div>
     </div>
   </div>
 
   <div class="screen" id="sVN" hidden>
     <div class="stage"><img class="por" id="pL" alt=""><img class="por" id="pR" alt=""></div>
-    <div class="vtime" id="vTime">21:47 · LHR T3</div>
-    <div class="vtop"><button id="vSkip">跳过 ▶▶</button></div>
+    <div class="vtime" id="vTime">21:47 · LHR T2</div>
+    <div class="vtop"><button id="vSkip">跳过剧情 ▶▶</button></div>
     <div class="choices" id="vChoices" hidden></div>
     <div class="vbox"><div class="vname" id="vName"></div><div class="vtext" id="vText"></div><div class="vnext" id="vNext">▼</div></div>
   </div>
@@ -207,7 +226,7 @@ h2{margin:0;font-family:var(--display);font-weight:400;font-size:clamp(34px,9vw,
       <div class="kicker">CAUGHT · 被请去喝茶</div>
       <h2 id="overTitle">被抓住了</h2>
       <p class="story" id="overText"></p>
-      <div class="row"><button class="go" id="bRetry">再试一次</button><button class="go alt" id="bRePerk">换个装备</button></div>
+      <div class="row"><button class="go" id="bRetry">再试一次</button><button class="go alt" id="bOverTitle">回标题</button></div>
       <a class="back" href="./">← 返回航班列表 All games</a>
     </div>
   </div>
@@ -215,7 +234,7 @@ h2{margin:0;font-family:var(--display);font-weight:400;font-size:clamp(34px,9vw,
   <div class="screen" id="sWin" hidden>
     <div class="card">
       <div class="kicker">ARRIVED · 到达入口坡道</div>
-      <h2>和苏芮会合了！</h2>
+      <h2>和 ZRH 会合了！</h2>
       <span class="rank" id="wRank"></span>
       <div class="stats">
         <div><b id="wTime">0</b><span>用时（秒）</span></div>
@@ -275,7 +294,12 @@ const lerp=(a,b,t)=>a+(b-a)*t;
 const angDiff=(a,b)=>{let d=a-b;while(d>Math.PI)d-=2*Math.PI;while(d<-Math.PI)d+=2*Math.PI;return d;};
 const lsGet=k=>{try{return localStorage.getItem(k)}catch(e){return null}};
 const lsSet=(k,v)=>{try{localStorage.setItem(k,v)}catch(e){}};
-const isTouch=matchMedia('(pointer:coarse)').matches;
+const isTouch=matchMedia('(pointer:coarse)').matches||('ontouchstart' in window)||navigator.maxTouchPoints>0;
+if(isTouch)document.body.classList.add('touch');
+addEventListener('touchstart',()=>document.body.classList.add('touch'),{once:true,passive:true});
+document.addEventListener('gesturestart',e=>e.preventDefault());
+document.addEventListener('contextmenu',e=>{if(!e.target.closest('input,textarea'))e.preventDefault();});
+document.getElementById('app').addEventListener('touchmove',e=>{if(!e.target.closest('.card,.choices'))e.preventDefault();},{passive:false});
 
 /* ---------------- audio ---------------- */
 let AC=null, muted=lsGet('lhr_mute')==='1';
@@ -302,8 +326,8 @@ const SFX={
 
 /* ---------------- renderer / scene ---------------- */
 const renderer=new THREE.WebGLRenderer({antialias:!isTouch,powerPreference:'high-performance'});
-renderer.setPixelRatio(Math.min(devicePixelRatio||1,isTouch?1.5:2));
-renderer.shadowMap.enabled=true; renderer.shadowMap.type=THREE.PCFSoftShadowMap;
+renderer.setPixelRatio(Math.min(devicePixelRatio||1,isTouch?1.25:2));
+renderer.shadowMap.enabled=true; renderer.shadowMap.type=isTouch?THREE.PCFShadowMap:THREE.PCFSoftShadowMap;
 renderer.toneMapping=THREE.ACESFilmicToneMapping; renderer.toneMappingExposure=1.3;
 $('gl').append(renderer.domElement);
 const scene=new THREE.Scene();
@@ -365,7 +389,7 @@ function rayT(ax,az,bx,bz,all=false){const dx=bx-ax,dz=bz-az;let tm=1;for(const 
 const los=(ax,az,bx,bz)=>rayT(ax,az,bx,bz)>=.999;
 
 /* =====================================================================
-   关卡：T3 顶层停车场（x 向右，z 向下；单位约等于米）
+   关卡：T2 顶层停车场（x 向右，z 向下；单位约等于米）
    左上角 = 车辆入口坡道（终点）；顶部车道向右到闸机；左侧车道向下；
    左侧车道外是铁栅栏和机坪；底部是航站楼出口（起点）。
    ===================================================================== */
@@ -402,7 +426,7 @@ function drawFloor(){
   ['e','e','e','e'].forEach((d,i)=>farrow(18+i*12,4.6,'e'));
   [13,21,29,36].forEach(z=>farrow(5.7,z,'s'));
   farrow(21.8,20,'s');farrow(47.8,17,'s');farrow(47.8,27,'s');farrow(67,16,'s');farrow(67,26,'s');
-  ftext('SHORT STAY 3 · LEVEL 6',36,6.3,1.2,'rgba(255,210,0,.55)');
+  ftext('TERMINAL 2 · SHORT STAY',36,6.3,1.2,'rgba(255,210,0,.55)');
   ftext('IN',4.6,-.3,1.3,'rgba(255,255,255,.9)');
   ftext('EXIT',67.8,3,1.1,'rgba(255,255,255,.8)');
   // bays
@@ -509,7 +533,7 @@ function aircraft(x,z,rot,len,livery,tailCol){
 }
 
 /* =====================================================================
-   方块人（平滑方块人）：玩家、苏芮、security；立绘也用同一个模型渲染
+   方块人（平滑方块人）：玩家、ZRH、security；立绘也用同一个模型渲染
    ===================================================================== */
 function makePerson(sp){
   const g=new THREE.Group(); const P={};
@@ -727,9 +751,9 @@ function route(a,b){ // dijkstra
    ===================================================================== */
 const VR=8.5, HALF=32*Math.PI/180;
 const G={};
-let state='load', perk=lsGet('lhr302_perk')||'', introSeen=false;
+let state='load', perk=lsGet('lhr302_perk')||'';
 let best=Number(lsGet('lhr302_best'))||0;
-const player={x:35,z:42.2,ang:Math.PI,mesh:null,st:1,tired:false,stun:0,stepT:0,moving:false,sprint:false};
+const player={x:35,z:42.2,vx:0,vz:0,ang:Math.PI,mesh:null,st:1,tired:false,stun:0,stepT:0,moving:false,sprint:false};
 const guards=[];
 const GUARD_DEF=[
   {name:'Dave',who:'dave',start:'M2',home:['M1','M2','M3','W1','W2','W3']},
@@ -748,7 +772,8 @@ function makeGuards(){
     const idx=[];for(let i=1;i<=CONE_N;i++)idx.push(0,i,i+1);geo.setIndex(idx);
     const cone=new THREE.Mesh(geo,coneMat());cone.frustumCulled=false;cone.renderOrder=2;scene.add(cone);
     const el=document.createElement('div');el.className='gb';el.hidden=true;$('bubbles').append(el);
-    guards.push({...d,mesh:m,cone,el,home:new Set(d.home)});
+    const gm=document.createElement('div');gm.className='gm';gm.hidden=true;gm.innerHTML='<i></i>';$('bubbles').append(gm);
+    guards.push({...d,mesh:m,cone,el,gm,home:new Set(d.home)});
   });
 }
 function resetGuards(){
@@ -775,13 +800,13 @@ function moveTo(g,tx,tz,spd,dt,r=.4){
 }
 const turn=(a,b,k)=>a+clamp(angDiff(b,a),-k,k);
 function startChase(g){
-  g.state='chase';g.sus=1;g.lostT=0;G.spotted++;SFX.alarm();gsay(g,pick(['Oi! 站住！','别跑！','Stop right there!','喂！你！']),1.8,'red');
+  g.state='chase';g.sus=1;g.lostT=0;G.spotted++;G.shake=.5;SFX.alarm();gsay(g,pick(['Oi! 站住！','别跑！','Stop right there!','喂！你！']),1.8,'red');
   if(G.spotted===1)phone('rui','被发现了！快跑，找掩护甩掉他！');
 }
 function updGuard(g,dt){
   const px=player.x,pz=player.z,dx=px-g.x,dz=pz-g.z,d=Math.hypot(dx,dz);
   let seen=false;
-  if(d<VR){const da=Math.abs(angDiff(Math.atan2(dx,dz),g.ang));if((da<HALF||d<1.5)&&los(g.x,g.z,px,pz))seen=true;}
+  if(d<VR&&G.t>1.2){const da=Math.abs(angDiff(Math.atan2(dx,dz),g.ang));if((da<HALF||d<1.5)&&los(g.x,g.z,px,pz))seen=true;}
   g.seen=seen;
   if(seen){g.lastX=px;g.lastZ=pz;g.lostT=0;}
   if(g.state!=='chase'){
@@ -875,7 +900,7 @@ function updMovers(dt){
     c.ang=turn(c.ang,Math.atan2(ux,uz)-Math.PI/2,dt*4);
     c.g.position.set(c.x,0,c.z);c.g.rotation.y=c.ang;
     // hard contact
-    const along2=Math.abs(rx*ux+rz*uz);if(along2<2.5&&side<1.25&&player.stun<=0&&c.spd>1.2){player.stun=.9;const nx=-uz,nz=ux,sg=(-rx*uz+rz*ux)>0?1:-1;player.x+=nx*sg*1.2;player.z+=nz*sg*1.2;resolve(player,.38);toast('小心车！');}
+    const along2=Math.abs(rx*ux+rz*uz);if(along2<2.5&&side<1.25&&player.stun<=0&&c.spd>1.2){player.stun=.9;G.shake=.8;const nx=-uz,nz=ux,sg=(-rx*uz+rz*ux)>0?1:-1;player.x+=nx*sg*1.2;player.z+=nz*sg*1.2;resolve(player,.38);toast('小心车！');}
     if(Math.hypot(c.x-67.8,c.z-1.2)<7)near=true;
   }
   barrierArm.rotation.z=lerp(barrierArm.rotation.z,near?1.35:0,dt*3);
@@ -924,7 +949,7 @@ const joy={on:false,id:null,ox:0,oy:0,x:0,y:0};
 let touchSprint=false;
 addEventListener('keydown',e=>{
   const k=e.key.toLowerCase();
-  if(state==='vn'){if(k===' '||k==='enter'){e.preventDefault();vnAdvance();}return;}
+  if(state==='vn'){if(k===' '||k==='enter'){e.preventDefault();vnAdvance();}else if(k==='escape'||k==='s'&&e.ctrlKey){vnSkip();}return;}
   if(state!=='play'&&state!=='paused')return;
   if(['arrowup','arrowdown','arrowleft','arrowright',' ','tab'].includes(k))e.preventDefault();
   if(k==='escape'||k==='p'){state==='play'?pause():resume();return;}
@@ -938,8 +963,8 @@ addEventListener('blur',()=>{keys.clear();if(state==='play')pause();});
 document.addEventListener('visibilitychange',()=>{if(document.hidden&&state==='play')pause();});
 const jz=$('joy'),jb=$('joyBase'),jk=$('joyKnob');
 jz.addEventListener('pointerdown',e=>{if(state!=='play')return;joy.on=true;joy.id=e.pointerId;joy.ox=e.clientX;joy.oy=e.clientY;joy.x=joy.y=0;jb.style.display='block';jb.style.left=e.clientX+'px';jb.style.top=e.clientY+'px';jk.style.transform='';jz.setPointerCapture(e.pointerId);$('joyHint').hidden=true;});
-jz.addEventListener('pointermove',e=>{if(!joy.on||e.pointerId!==joy.id)return;let dx=e.clientX-joy.ox,dy=e.clientY-joy.oy;const d=Math.hypot(dx,dy),m=50;if(d>m){dx*=m/d;dy*=m/d;}joy.x=dx/m;joy.y=dy/m;jk.style.transform=`translate(${dx}px,${dy}px)`;});
-const joyEnd=e=>{if(e.pointerId!==joy.id)return;joy.on=false;joy.x=joy.y=0;jb.style.display='none';};
+jz.addEventListener('pointermove',e=>{if(!joy.on||e.pointerId!==joy.id)return;let dx=e.clientX-joy.ox,dy=e.clientY-joy.oy;const d=Math.hypot(dx,dy),m=52;if(d>m*1.6){joy.ox+=dx*(1-m*1.6/d);joy.oy+=dy*(1-m*1.6/d);jb.style.left=joy.ox+'px';jb.style.top=joy.oy+'px';dx=e.clientX-joy.ox;dy=e.clientY-joy.oy;}const d2=Math.hypot(dx,dy);if(d2>m){dx*=m/d2;dy*=m/d2;}joy.x=dx/m;joy.y=dy/m;jk.style.transform=`translate(${dx}px,${dy}px)`;jb.classList.toggle('run',Math.hypot(joy.x,joy.y)>.93);});
+const joyEnd=e=>{if(e.pointerId!==joy.id)return;joy.on=false;joy.x=joy.y=0;jb.style.display='none';jb.classList.remove('run');};
 jz.addEventListener('pointerup',joyEnd);jz.addEventListener('pointercancel',joyEnd);
 $('tSprint').addEventListener('pointerdown',e=>{e.preventDefault();touchSprint=true;$('tSprint').classList.add('on');});
 ['pointerup','pointercancel','pointerleave'].forEach(t=>$('tSprint').addEventListener(t,()=>{touchSprint=false;$('tSprint').classList.remove('on');}));
@@ -955,10 +980,12 @@ function updCamera(dt,snap=false){
   if(G.cine&&state!=='play'){tx=G.cine.x;tz=G.cine.z;oy=G.cine.oy;oz=G.cine.oz;}
   else if(state==='title'||state==='load'){titleOrbit+=dt*.05;tx=36+Math.sin(titleOrbit)*6;tz=18;oy=52;oz=34;}
   else if(mapView){tx=34;tz=19;oy=narrow?100:66;oz=narrow?30:26;}
-  else{tx=player.x;tz=player.z;oy=narrow?24:19;oz=narrow?9:10.5;}
-  const k=snap?1:1-Math.pow(.004,dt);
+  else{tx=player.x+player.vx*.32;tz=player.z+player.vz*.32;oy=narrow?25:19;oz=narrow?9.5:10.5;}
+  const k=snap?1:1-Math.pow(.006,dt);
   camT.lerp(new THREE.Vector3(tx,0,tz-1),k);camPos.lerp(new THREE.Vector3(tx,oy,tz+oz),k);
-  camera.position.copy(camPos);camera.lookAt(camT);
+  camera.position.copy(camPos);
+  if(G.shake>0){G.shake=Math.max(0,G.shake-dt*2.5);camera.position.x+=(Math.random()-.5)*G.shake;camera.position.z+=(Math.random()-.5)*G.shake;}
+  camera.lookAt(camT);
 }
 
 /* ---------------- HUD / minimap / phone ---------------- */
@@ -980,19 +1007,24 @@ function drawMini(){
   const [px,py]=M(player.x,player.z);c.save();c.translate(px,py);c.rotate(-player.ang+Math.PI);c.fillStyle='#fff';c.strokeStyle='#111';c.lineWidth=2;c.beginPath();c.moveTo(0,-9);c.lineTo(6,6);c.lineTo(-6,6);c.closePath();c.fill();c.stroke();c.restore();
 }
 let phT=0;
-function phone(who,text,dur=3.6){$('phImg').src=por(who,'happy');$('phName').textContent=who==='rui'?'苏芮 · 短信':who;$('phText').textContent=text;$('phone').classList.add('on');phT=dur;SFX.blip();}
+function phone(who,text,dur=3.6){$('phImg').src=por(who,'happy');$('phName').textContent=who==='rui'?'ZRH · 短信':who;$('phText').textContent=text;$('phone').classList.add('on');phT=dur;SFX.blip();}
+function banner(t,sub='',dur=1.4){const b=$('banner');b.innerHTML=t+(sub?`<small>${sub}</small>`:'');b.classList.add('on');clearTimeout(banner._t);banner._t=setTimeout(()=>b.classList.remove('on'),dur*1000);}
 function toast(m){const t=$('toast');t.textContent=m;t.classList.add('on');clearTimeout(toast._t);toast._t=setTimeout(()=>t.classList.remove('on'),1600);}
 let lastHud='';
 function hud(){
-  const obj=G.hasBag?'<b>目标</b> 带着相机包去左上角入口坡道':G.pick>0?`<b>拿包中</b> ${Math.round(G.pick/1*100)}%`:'<b>目标</b> 找到苏芮的相机包（右半边车位）';
+  const obj=G.hasBag?'<b>目标</b> 带着相机包去左上角入口坡道':G.pick>0?`<b>拿包中</b> ${Math.round(G.pick/1*100)}%`:'<b>目标</b> 找到 ZRH 的相机包（右半边车位）';
   const s=obj+'|'+G.t.toFixed(1)+'|'+G.cansLeft+'|'+G.tagN+'|'+G.spotted;
   if(s!==lastHud){lastHud=s;$('hObj').innerHTML=obj;$('hTime').textContent=G.t.toFixed(1)+'s';$('hCan').textContent='🥫 '+G.cansLeft;$('hTag').textContent='🏷 '+G.tagN+'/3';$('hSpot').textContent='👁 '+G.spotted;}
   const f=$('stFill');f.style.width=(player.st*100).toFixed(0)+'%';f.classList.toggle('low',player.tired);
   const chase=guards.some(g=>g.state==='chase'),warn=guards.some(g=>g.sus>.3);
   $('vign').className=chase?'on':warn?'warn':'';
+  const st=chase?'🔴 被追！':warn?'🟡 被注意':'🟢 隐蔽';if($('hState').textContent!==st)$('hState').textContent=st;
 }
 const tmpV=new THREE.Vector3();
-function placeBubbles(){guards.forEach(g=>{if(g.el.hidden)return;tmpV.set(g.x,2.5,g.z).project(camera);g.el.style.transform=`translate(${(tmpV.x*.5+.5)*innerWidth}px,${(-tmpV.y*.5+.5)*innerHeight}px) translate(-50%,-100%)`;});}
+function placeBubbles(){guards.forEach(g=>{
+  const showG=state==='play'&&g.state!=='chase'&&g.sus>.02;g.gm.hidden=!showG;
+  if(showG){tmpV.set(g.x,2.9,g.z).project(camera);g.gm.style.transform=`translate(${(tmpV.x*.5+.5)*innerWidth}px,${(-tmpV.y*.5+.5)*innerHeight}px) translate(-50%,-100%)`;g.gm.firstChild.style.width=(g.sus*100).toFixed(0)+'%';g.gm.classList.toggle('hot',g.sus>.6);}
+  if(g.el.hidden)return;tmpV.set(g.x,g.gm.hidden?2.9:3.4,g.z).project(camera);g.el.style.transform=`translate(${(tmpV.x*.5+.5)*innerWidth}px,${(-tmpV.y*.5+.5)*innerHeight}px) translate(-50%,-100%)`;});}
 
 /* =====================================================================
    PLAYER
@@ -1006,7 +1038,7 @@ function updPlayer(dt){
   if(joy.on){mx+=joy.x;mz+=joy.y;}
   let m=Math.hypot(mx,mz);if(m>1){mx/=m;mz/=m;m=1;}
   if(m<.15)m=0;
-  const wantSprint=(keys.has('shift')||touchSprint)&&m>0;
+  const wantSprint=(keys.has('shift')||touchSprint||(joy.on&&Math.hypot(joy.x,joy.y)>.93))&&m>0;
   const drain=perk==='shoes'?1/3.6:1/2.5;
   if(player.tired&&player.st>.35)player.tired=false;
   player.sprint=wantSprint&&!player.tired&&player.stun<=0;
@@ -1014,8 +1046,14 @@ function updPlayer(dt){
   else player.st=Math.min(1,player.st+dt*(m?.2:.3));
   if(player.stun>0){player.stun-=dt;m=0;}
   const spd=player.sprint?5.6:3.4;
-  if(m>0){player.x+=mx/(Math.hypot(mx,mz)||1)*spd*m*dt;player.z+=mz/(Math.hypot(mx,mz)||1)*spd*m*dt;player.ang=turn(player.ang,Math.atan2(mx,mz),dt*14);}
+  const n=Math.hypot(mx,mz)||1, tvx=m>0?mx/n*spd*m:0, tvz=m>0?mz/n*spd*m:0;
+  const acc=1-Math.exp(-dt*(m>0?16:22));
+  player.vx+=(tvx-player.vx)*acc;player.vz+=(tvz-player.vz)*acc;
+  const ox=player.x,oz=player.z;
+  player.x+=player.vx*dt;player.z+=player.vz*dt;
+  if(m>0)player.ang=turn(player.ang,Math.atan2(mx,mz),dt*16);
   resolve(player,.38);
+  if(dt>0){player.vx=lerp(player.vx,(player.x-ox)/dt,.5);player.vz=lerp(player.vz,(player.z-oz)/dt,.5);}
   const zmin=(player.x<8.5)?(G.hasBag?-4:.45):.8;
   player.x=clamp(player.x,.45,71.6);player.z=clamp(player.z,zmin,42.6);
   player.moving=m>0;
@@ -1026,23 +1064,31 @@ function updPlayer(dt){
   // guide arrow
   const tx=G.hasBag?4.3:G.bagPos.x,tz=G.hasBag?.2:G.bagPos.z;guideArrow.position.set(player.x,.07,player.z);guideArrow.rotation.y=Math.atan2(tx-player.x,tz-player.z)+Math.PI;
   guideArrow.visible=Math.hypot(tx-player.x,tz-player.z)>3;
+  pRing.position.set(player.x,.06,player.z);pRing.material.color.set(player.sprint?'#ffd200':'#2fd3c0');
+  // throw landing preview
+  if(G.cansLeft>0){const dx=Math.sin(player.ang),dz=Math.cos(player.ang);let lx=player.x+dx*7.5,lz=player.z+dz*7.5;const t=rayT(player.x,player.z,lx,lz,true);
+    aimRing.position.set(player.x+(lx-player.x)*t*.95,.07,player.z+(lz-player.z)*t*.95);aimRing.visible=true;aimRing.material.opacity=.28+Math.sin(G.t*4)*.08;}
+  else aimRing.visible=false;
 }
+const pRing=(()=>{const m=new THREE.Mesh(new THREE.RingGeometry(.62,.8,36),new THREE.MeshBasicMaterial({color:'#2fd3c0',transparent:true,opacity:.75,depthWrite:false}));m.rotation.x=-Math.PI/2;scene.add(m);return m;})();
+const aimRing=(()=>{const m=new THREE.Mesh(new THREE.RingGeometry(.45,.6,28),new THREE.MeshBasicMaterial({color:'#ffd200',transparent:true,opacity:.3,depthWrite:false}));m.rotation.x=-Math.PI/2;m.visible=false;scene.add(m);return m;})();
 
 /* =====================================================================
    FLOW
    ===================================================================== */
 const screens=['sLoad','sTitle','sVN','sPause','sOver','sWin','sLogin'];
 function show(id){screens.forEach(s=>$(s).hidden=(s!==id));}
-function setPlaying(on){$('hud').hidden=!on;mini.hidden=!on;document.body.classList.toggle('playing',on);if(!on){$('vign').className='';guards.forEach(g=>g.el.hidden=true);$('phone').classList.remove('on');}}
+function setPlaying(on){$('hud').hidden=!on;mini.hidden=!on;document.body.classList.toggle('playing',on);if(!on){$('vign').className='';guards.forEach(g=>{g.el.hidden=true;g.gm.hidden=true;});$('banner').classList.remove('on');$('phone').classList.remove('on');}}
 function newRun(){
-  Object.assign(G,{t:0,spotted:0,hasBag:false,pick:0,tagN:0,cansLeft:perk==='cans'?5:2,over:false,spawnT:3,msgNear:false,noBagT:0,cine:null});setFace(ruiNpc,'normal');
-  Object.assign(player,{x:35,z:42.2,ang:Math.PI,st:1,tired:false,stun:0,stepT:0});
+  Object.assign(G,{t:0,spotted:0,hasBag:false,pick:0,tagN:0,cansLeft:perk==='cans'?5:2,over:false,spawnT:3,msgNear:false,noBagT:0,cine:null,shake:0});setFace(ruiNpc,'normal');
+  Object.assign(player,{x:35,z:42.2,vx:0,vz:0,ang:Math.PI,st:1,tired:false,stun:0,stepT:0});
   movers.forEach(c=>scene.remove(c.g));movers.length=0;cans.forEach(c=>scene.remove(c.m));cans.length=0;
   resetGuards();placeItems();mapView=false;$('bMap').textContent='🗺';
   ruiNpc.visible=true;
 }
 function startPlay(){
   newRun();show(null);setPlaying(true);state='play';updCamera(0,true);last=performance.now();
+  banner('出发！','找到 ZRH 的相机包');
   setTimeout(()=>{if(state==='play')phone('rui','相机包在右半边的车位里，有黄色光柱的那个。拿到后来左上角入口找我！',4.5);},600);
 }
 function pause(){if(state!=='play')return;state='paused';show('sPause');}
@@ -1076,7 +1122,7 @@ function update(dt){
   // bag pickup (stand close for 0.9s)
   if(!G.hasBag){bag.userData.ring.scale.setScalar(1+Math.sin(G.t*5)*.12);bag.rotation.y+=dt*.8;
     const d=Math.hypot(player.x-G.bagPos.x,player.z-G.bagPos.z);
-    if(d<1.5){G.pick+=dt/.9;if(G.pick>=1){G.hasBag=true;G.pick=0;bag.visible=false;SFX.bag();phone('rui','拿到了？！太好了！快来左上角入口坡道，我在车边等你！',4.5);}}
+    if(d<1.5){G.pick+=dt/.9;if(G.pick>=1){G.hasBag=true;G.pick=0;bag.visible=false;SFX.bag();banner('拿到相机包！','去左上角入口坡道');phone('rui','拿到了？！太好了！快来左上角入口坡道，我在车边等你！',4.5);}}
     else G.pick=Math.max(0,G.pick-dt*2);}
   tags.forEach(t=>{if(t.got)return;t.g.rotation.y+=dt*2;t.g.position.y=.9+Math.sin(G.t*3+t.x)*.12;if(Math.hypot(player.x-t.x,player.z-t.z)<1){t.got=true;scene.remove(t.g);G.tagN++;SFX.pick();toast(`捡到行李牌 ${G.tagN}/3`);}});
   // goal
@@ -1118,9 +1164,9 @@ addEventListener('resize',resize);
      {time:'22:58 · 某地'}     改左上角的时间地点
      {if:()=>bool, ...}       条件显示
    ===================================================================== */
-const NAMES={you:'林屿',rui:'苏芮',dave:'Dave · 安保主管',guard:'Security'};
+const NAMES={you:'STEVEN',rui:'ZRH',dave:'Dave · 安保主管',guard:'Security'};
 let vn=null,typing=null;
-function playVN(script,done,time){vn={script,i:-1,done};$('vTime').textContent=time||'21:47 · LHR T3';['pL','pR'].forEach(i=>{$(i).classList.remove('show','dim');});show('sVN');state='vn';vnNext();}
+function playVN(script,done,time){vn={script,i:-1,done};$('vTime').textContent=time||'21:47 · LHR T2';['pL','pR'].forEach(i=>{$(i).classList.remove('show','dim');});show('sVN');state='vn';vnNext();}
 function vnNext(){
   if(!vn)return;
   vn.i++;let s=vn.script[vn.i];
@@ -1130,7 +1176,8 @@ function vnNext(){
   if(s.run){s.run();return vnNext();}
   if(s.choice){
     const box=$('vChoices');box.innerHTML='';box.hidden=false;$('vNext').hidden=true;
-    s.choice.forEach(o=>{const b=document.createElement('button');b.innerHTML=o.t+(o.sub?`<small>${o.sub}</small>`:'');b.onclick=ev=>{ev.stopPropagation();box.hidden=true;SFX.pick();o.go&&o.go();vnNext();};box.append(b);});
+    s.choice.forEach(o=>{const b=document.createElement('button');b.innerHTML=o.t+(o.sub?`<small>${o.sub}</small>`:'')+(o.last?'<small>⭐ 上次选的</small>':'');b.onclick=ev=>{ev.stopPropagation();box.hidden=true;SFX.pick();o.go&&o.go();if(vn.skipAll)vn.i=vn.script.length;vnNext();};box.append(b);});
+    $('vName').className='vname narr';$('vText').className='vtext narr';$('vText').textContent='选一件装备带上：';
     setTimeout(()=>box.querySelector('button')?.focus(),50);return;
   }
   $('vChoices').hidden=true;
@@ -1148,30 +1195,32 @@ function vnNext(){
 }
 function vnAdvance(){if(!vn)return;if(!$('vChoices').hidden)return;if(typing){clearInterval(typing);typing=null;$('vText').textContent=vn.full;$('vNext').hidden=false;return;}vnNext();}
 $('sVN').addEventListener('click',e=>{if(e.target.closest('.vtop')||e.target.closest('.choices'))return;vnAdvance();});
-$('vSkip').onclick=e=>{e.stopPropagation();if(!vn)return;clearInterval(typing);typing=null;
-  // 跳到下一个选项（选项不能跳过），没有选项就直接结束
+function vnSkip(){if(!vn)return;clearInterval(typing);typing=null;vn.skipAll=true;
+  if(!$('vChoices').hidden)return; // 已经在选项上：选完直接开始
+  // 跳过剧情：如果后面有装备选项，直接跳到选项；选完立即结束
   for(let j=vn.i+1;j<vn.script.length;j++){const s=vn.script[j];if(s.run&&(!s.if||s.if()))s.run();if(s.choice&&(!s.if||s.if())){vn.i=j-1;vnNext();return;}}
-  vn.i=vn.script.length;vnNext();};
+  vn.i=vn.script.length;vnNext();}
+$('vSkip').onclick=e=>{e.stopPropagation();vnSkip();};
 
 const PERKS={
   vest:{t:'🦺 一件荧光背心',sub:'看起来像机场工作人员：被看见时 security 起疑慢 40%',line:'你穿上了荧光背心 🦺（被看见时起疑更慢）'},
   shoes:{t:'👟 一双软底跑鞋',sub:'冲刺没有脚步声，体力更耐用',line:'你换上了软底跑鞋 👟（冲刺无声、体力更多）'},
   cans:{t:'🥤 一袋易拉罐',sub:'扔出去能把 security 引开：易拉罐 5 个（平时 2 个）',line:'你拎着一袋易拉罐 🥫（可以扔 5 次）'},
 };
-const perkChoice=()=>({choice:Object.entries(PERKS).map(([k,p])=>({t:p.t,sub:p.sub,go:()=>{perk=k;lsSet('lhr302_perk',k);}}))});
+const perkChoice=()=>({choice:Object.entries(PERKS).map(([k,p])=>({t:p.t,sub:p.sub,last:k===perk,go:()=>{perk=k;lsSet('lhr302_perk',k);}}))});
 const INTRO=[
-  {who:'narr',t:'21:47，伦敦希思罗机场 3 号航站楼。',clear:true},
-  {who:'narr',t:'十一个小时的航班，入境、取行李。落地伦敦的第一晚，天边还剩最后一点橘色。'},
-  {who:'you',face:'normal',t:'（手机震了一下——是那个拍机群里的学姐。）'},
-  {who:'rui',face:'happy',t:'落地了吧？欢迎来伦敦！我是苏芮，说好来接你的~'},
-  {who:'you',face:'happy',t:'学姐！我刚出来，你在哪儿？'},
-  {who:'rui',face:'normal',t:'T3 停车楼顶层。出了航站楼的门，往上走就是。'},
+  {who:'narr',t:'21:47，伦敦希思罗机场 2 号航站楼。',clear:true},
+  {who:'narr',t:'十一个小时的航班，入境、取行李。STEVEN 第一次来伦敦，天边还剩最后一点橘色。'},
+  {who:'you',face:'normal',t:'（手机震了一下——是姐姐 ZRH。）'},
+  {who:'rui',face:'happy',t:'落地了吧？欢迎来伦敦！姐姐亲自来接你，感动吧~'},
+  {who:'you',face:'happy',t:'姐！我刚出来，你在哪儿？'},
+  {who:'rui',face:'normal',t:'T2 停车楼顶层。出了航站楼的门，往上走就是。'},
   {who:'rui',face:'sad',t:'……但是，出了点状况。'},
   {who:'rui',face:'angry',t:'今晚顶层突然清场！Security 说有什么「特别安排」，把所有人都赶了出去，连我这个正经停车的都不放过。'},
   {who:'rui',face:'normal',t:'我的车被挪到了左上角的车辆入口坡道，只能在那儿等你。'},
   {who:'rui',face:'surprised',t:'更要命的是——我的相机包还落在停车场右半边！被赶的时候太急了！'},
-  {who:'you',face:'surprised',t:'那……我溜进去帮你拿？'},
-  {who:'rui',face:'happy',t:'就等你这句！包在右半边的空车位里。拿到之后，从左上角的入口出来找我。'},
+  {who:'you',face:'surprised',t:'又是相机……那我溜进去帮你拿？'},
+  {who:'rui',face:'happy',t:'不愧是我弟！包在右半边的空车位里。拿到之后，从左上角的入口出来找我。'},
   {who:'rui',face:'normal',t:'Security 会来回巡逻，红色扇形就是他们的视线。躲在车后面、柱子后面，他们就看不见你。'},
   {who:'rui',face:'normal',t:'跑起来会有脚步声，被听见他们会过来查看。还有，小心进出的车。'},
   {who:'rui',face:'happy',t:'对了，你身上带了什么？说不定用得上。'},
@@ -1188,18 +1237,18 @@ function caughtScript(g){
   const isDave=g.who==='dave';const w=isDave?'dave':'guard';const nm=isDave?NAMES.dave:`${g.name} · Security`;
   return [
     {who:w,name:nm,face:'angry',t:pick(isDave?['Evening. Roof\'s closed tonight, mate. 跟我去办公室填张表吧。','你是今晚第三个想溜上来的了。拍飞机的吧？……我就知道。','Nice try, kid. 今晚这层谁也不许待。']:['Excuse me! 这层今晚封了，你不能在这儿。','抓到了！Dave，这边又一个！','你在这干嘛？请跟我回航站楼。'])},
-    {who:'you',face:'sad',t:pick(['（……学姐，对不起。）','我、我只是迷路了……','（完了，被逮个正着。）'])},
+    {who:'you',face:'sad',t:pick(['（……姐，对不起。）','我、我只是迷路了……','（完了，被逮个正着。）'])},
     {if:()=>isDave,who:'dave',face:'happy',t:'别灰心，年轻人。说真的，今晚你们那帮拍飞机的，谁也别想上这层。'},
-    {who:'rui',face:'surprised',t:'诶？！你被抓了？没事没事，从出口再绕一次！我等你！'},
+    {who:'rui',face:'surprised',t:'诶？！STEVEN 你被抓了？没事没事，从出口再绕一次！姐等你！'},
   ];
 }
 function winScript(){
   return [
     {time:'23:0'+Math.min(4,Math.floor(G.winTime/40))+' · 车辆入口坡道'},
     {who:'narr',t:'坡道口，一辆橘红色的旧 Mini 闪了两下车灯。',clear:true},
-    {who:'rui',face:'happy',t:'林屿！这边这边！'},
-    {who:'you',face:'happy',t:'学姐！相机包——拿到了！'},
-    {if:()=>G.spotted===0,who:'rui',face:'surprised',t:'一次都没被发现？！你以前是干特工的吗……'},
+    {who:'rui',face:'happy',t:'STEVEN！这边这边！'},
+    {who:'you',face:'happy',t:'姐！相机包——拿到了！'},
+    {if:()=>G.spotted===0,who:'rui',face:'surprised',t:'一次都没被发现？！我弟以前是干特工的吗……'},
     {if:()=>G.spotted>0&&G.spotted<=2,who:'rui',face:'happy',t:'我在下面都听见有人喊「站住」了，哈哈哈。没事，到了就好！'},
     {if:()=>G.spotted>2,who:'rui',face:'sad',t:'整层楼的 security 都在追你吧……你是怎么跑出来的？！'},
     {if:()=>G.tagN===3,who:'rui',face:'happy',t:'还顺手捡了三张行李牌？眼神真好，这些可都是宝贝。'},
@@ -1212,27 +1261,28 @@ function winScript(){
 function playNextChapter(){
   if(STORY.nextUrl){location.href=STORY.nextUrl;return;}
   if(STORY.ready&&STORY.nextChapter.length){playVN(STORY.nextChapter,()=>show('sWin'),'23:05 · ???');return;}
-  playVN([{who:'narr',t:'那架「很特别的飞机」到底是什么？苏芮又为什么非要今晚来拍它？',clear:true},{who:'rui',face:'happy',t:'后面的故事还在写哦——下次登机见！'}],()=>show('sWin'),'23:05 · ???');
+  playVN([{who:'narr',t:'那架「很特别的飞机」到底是什么？ZRH 又为什么非要今晚来拍它？',clear:true},{who:'rui',face:'happy',t:'后面的故事还在写哦——下次登机见！'}],()=>show('sWin'),'23:05 · ???');
 }
 
 /* ---------------- buttons ---------------- */
 function toTitle(){state='title';setPlaying(false);newRun();show('sTitle');refreshTitle();}
 function refreshTitle(){$('bestT').textContent=best?`你的最快纪录：${best.toFixed(1)} 秒`:'';const pl=$('perkLine');if(perk&&PERKS[perk]){pl.hidden=false;pl.textContent=PERKS[perk].line;}else pl.hidden=true;}
-$('bStart').onclick=()=>{ac();if(!introSeen||!perk){introSeen=true;playVN(INTRO,startPlay);}else startPlay();};
+function startWithIntro(){ac();setPlaying(false);newRun();G.cine=null;state='title';playVN(INTRO,startPlay);}
+$('bStart').onclick=startWithIntro;
 $('bResume').onclick=resume;
-$('bRestart').onclick=()=>{startPlay();};
+$('bRestart').onclick=startWithIntro;
 $('bPause').onclick=()=>state==='play'?pause():resume();
 $('bMap').onclick=()=>state==='play'&&toggleMap();
 $('bMute').onclick=()=>{muted=!muted;lsSet('lhr_mute',muted?'1':'0');$('bMute').textContent=muted?'🔇':'🔊';};
 $('bMute').textContent=muted?'🔇':'🔊';
-$('bRetry').onclick=()=>startPlay();
-$('bRePerk').onclick=()=>{playVN([{who:'rui',face:'normal',t:'换个装备再试试？你想带什么？'},perkChoice(),{who:'rui',face:'happy',t:'好，再来一次！'}],startPlay,'21:52 · LHR T3');};
-$('bAgain').onclick=()=>startPlay();
+$('bRetry').onclick=startWithIntro;
+$('bOverTitle').onclick=toTitle;
+$('bAgain').onclick=startWithIntro;
 $('bNext').onclick=playNextChapter;
 $('bShare').onclick=async()=>{
-  const t=`我在《希思罗机场传奇 · T3 夜行》用 ${G.winTime.toFixed(1)} 秒溜过了 T3 停车楼顶层，被 security 发现 ${G.spotted} 次，捡到 ${G.tagN}/3 张行李牌。你来试试？`;
+  const t=`我在《希思罗机场传奇 · T2 夜行》用 ${G.winTime.toFixed(1)} 秒溜过了 T2 停车楼顶层，被 security 发现 ${G.spotted} 次，捡到 ${G.tagN}/3 张行李牌。你来试试？`;
   const url=new URL('./lhr302.html',location.href).href;
-  try{if(navigator.share){await navigator.share({title:'T3 夜行',text:t,url});return;}}catch(e){return;}
+  try{if(navigator.share){await navigator.share({title:'T2 夜行',text:t,url});return;}}catch(e){return;}
   try{await navigator.clipboard.writeText(t+' '+url);toast('已复制，去粘贴给朋友吧');}catch(e){toast('复制失败');}
 };
 
