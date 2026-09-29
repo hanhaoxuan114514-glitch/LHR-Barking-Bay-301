@@ -54,8 +54,7 @@ body{font-family:var(--body);color:var(--ink);-webkit-user-select:none;user-sele
 body.touch.playing #touch{display:block}
 body.touch .kb{display:none}
 body:not(.touch) .tc{display:none}
-#joyBase.run{border-color:#ffd200;border-style:solid;background:rgba(255,210,0,.15)}
-#joyBase.run #joyKnob{background:#ffd200}
+.tbtn.tired{opacity:.45;border-style:dashed}
 #joy{position:absolute;left:0;top:0;bottom:0;width:55%;pointer-events:auto}
 #joyBase{position:absolute;width:120px;height:120px;border-radius:50%;border:2px dashed rgba(255,255,255,.55);background:rgba(10,12,26,.25);transform:translate(-50%,-50%);display:none}
 #joyKnob{position:absolute;left:50%;top:50%;width:52px;height:52px;margin:-26px 0 0 -26px;border-radius:50%;background:rgba(47,211,192,.85);border:2px solid #fff}
@@ -106,6 +105,45 @@ h2{margin:0;font-family:var(--display);font-weight:400;font-size:clamp(34px,9vw,
 #banner.on{opacity:1;transform:translate(-50%,-50%) scale(1)}
 body.touch .btn-ic{width:40px;height:40px}
 @media (max-width:620px){.stat{font-size:11.5px;padding:3px 8px}.dbar{width:58px}.hrow{gap:6px}}
+/* 手机横屏（矮屏） */
+#hud{padding-left:calc(env(safe-area-inset-left,0px) + 14px);padding-right:calc(env(safe-area-inset-right,0px) + 14px)}
+@media (orientation:landscape) and (max-height:520px){
+  #hud{padding-top:calc(env(safe-area-inset-top,0px) + 6px);gap:4px}
+  .hrow{gap:5px;flex-wrap:nowrap}
+  .stat{font-size:11px;padding:2px 8px}
+  .btn-ic,body.touch .btn-ic{width:32px;height:32px;font-size:14px}
+  .dbar{width:56px}
+  #mini{width:128px;height:74px;top:calc(env(safe-area-inset-top,0px) + 76px);right:calc(env(safe-area-inset-right,0px) + 14px)}
+  #phone{top:calc(env(safe-area-inset-top,0px) + 72px);left:calc(env(safe-area-inset-left,0px) + 14px);max-width:min(330px,calc(100% - 190px));padding:4px 10px 4px 4px}
+  #phone img{width:34px;height:34px}
+  #phone span{font-size:12px}
+  .tbtn{width:66px;height:66px;font-size:14px}
+  #tSprint{right:calc(16px + env(safe-area-inset-right,0px));bottom:calc(env(safe-area-inset-bottom,0px) + 14px)}
+  #tThrow{right:calc(94px + env(safe-area-inset-right,0px));bottom:calc(env(safe-area-inset-bottom,0px) + 30px);width:54px;height:54px;font-size:12px}
+  #joyHint{bottom:12px;left:calc(env(safe-area-inset-left,0px) + 18px)}
+  #banner{top:30%;font-size:34px}
+  .screen{padding:8px}
+  .card{max-width:640px;padding:12px 16px;gap:8px;max-height:calc(100% - 4px)}
+  h1{font-size:40px}
+  h2{font-size:30px}
+  .keys{grid-template-columns:auto 1fr auto 1fr;gap:3px 10px;font-size:12px}
+  .story{font-size:12.5px;line-height:1.5}
+  .go{font-size:22px;padding:5px 14px}
+  .row .go{font-size:18px}
+  .stats b{font-size:20px}
+  .por{height:92vh;max-width:32vw}
+  #pL{left:max(0px,calc(50% - 470px))}
+  #pR{right:max(0px,calc(50% - 470px))}
+  .vbox{min-height:84px;padding:18px 16px 10px;width:min(760px,calc(100% - 24px));bottom:calc(env(safe-area-inset-bottom,0px) + 8px)}
+  .vname{font-size:17px;top:-15px}
+  .vtext{font-size:14px;line-height:1.55;min-height:2.6em}
+  .choices{top:38%;gap:6px;width:min(520px,calc(100% - 120px))}
+  .choices button{padding:6px 12px;font-size:14px}
+  .choices button small{font-size:11.5px}
+  .vtop{top:calc(env(safe-area-inset-top,0px) + 8px)}
+  .vtop button{font-size:12px;padding:5px 12px}
+  .vtime{top:calc(env(safe-area-inset-top,0px) + 8px);font-size:11px}
+}
 #toast{position:absolute;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 28px);transform:translateX(-50%);background:var(--ink);color:#fff;padding:8px 16px;border-radius:999px;font-weight:900;font-size:14px;pointer-events:none;opacity:0;transition:opacity .2s;white-space:nowrap}
 #toast.on{opacity:1}
 
@@ -138,6 +176,9 @@ body.touch .btn-ic{width:40px;height:40px}
 .choices{position:absolute;left:50%;top:44%;transform:translate(-50%,-50%);display:flex;flex-direction:column;gap:10px;width:min(560px,calc(100% - 32px));pointer-events:auto}
 .choices button{appearance:none;text-align:left;border:3px solid var(--line);background:var(--paper);color:var(--ink);border-radius:14px;box-shadow:4px 4px 0 var(--line);padding:10px 14px;font:900 16px var(--body);cursor:pointer}
 .choices button small{display:block;font-weight:500;font-size:12.5px;color:#5a4a3a;margin-top:2px}
+#sVN.choosing .vbox{display:none}
+#sVN.choosing .choices{top:50%}
+.chead{align-self:center;font:400 24px var(--display);color:#ffd200;letter-spacing:.08em;text-shadow:0 2px 0 #000}
 .choices button:hover,.choices button:focus-visible{background:#ffd200;outline:none}
 @media (max-width:620px){.por{height:62vh;max-width:62vw}#pL{left:-6vw}#pR{right:-6vw}.vbox{min-height:118px;padding:24px 14px 14px}}
 @media (prefers-reduced-motion:reduce){.vnext{animation:none}}
@@ -172,7 +213,7 @@ body.touch .btn-ic{width:40px;height:40px}
 
   <div id="touch">
     <div id="joy"><div id="joyBase"><div id="joyKnob"></div></div></div>
-    <div id="joyHint">← 左半屏按住拖动移动 · 推到底冲刺</div>
+    <div id="joyHint">← 左半屏按住拖动移动</div>
     <button class="tbtn" id="tSprint">冲刺</button>
     <button class="tbtn" id="tThrow">扔罐</button>
   </div>
@@ -190,8 +231,8 @@ body.touch .btn-ic{width:40px;height:40px}
         <dt class="kb"><span class="kbd">Shift</span></dt><dd class="kb">冲刺：更快，但有脚步声，会耗体力</dd>
         <dt class="kb"><span class="kbd">E</span> / <span class="kbd">空格</span></dt><dd class="kb">往前扔易拉罐（地上的黄圈是落点），把 security 引过去</dd>
         <dt class="kb"><span class="kbd">M</span></dt><dd class="kb">俯瞰整个停车楼</dd>
-        <dt class="tc">🕹 左半屏</dt><dd class="tc">按住拖动移动，推到底自动冲刺</dd>
-        <dt class="tc">右下按钮</dt><dd class="tc">「冲刺」按住加速，「扔罐」往前扔易拉罐</dd>
+        <dt class="tc">🕹 左半屏</dt><dd class="tc">按住拖动移动</dd>
+        <dt class="tc">右下按钮</dt><dd class="tc">「冲刺」按住加速（体力耗尽后要松开再按），「扔罐」往前扔易拉罐</dd>
         <dt class="tc">🗺</dt><dd class="tc">右上角按钮：俯瞰整个停车楼</dd>
         <dt>👁</dt><dd>红色扇形是 security 的视野，车和立柱能挡住视线</dd>
         <dt>🟨</dt><dd>security 头顶的黄条满了就会来追你，躲进掩护让它降下去</dd>
@@ -963,11 +1004,11 @@ addEventListener('blur',()=>{keys.clear();if(state==='play')pause();});
 document.addEventListener('visibilitychange',()=>{if(document.hidden&&state==='play')pause();});
 const jz=$('joy'),jb=$('joyBase'),jk=$('joyKnob');
 jz.addEventListener('pointerdown',e=>{if(state!=='play')return;joy.on=true;joy.id=e.pointerId;joy.ox=e.clientX;joy.oy=e.clientY;joy.x=joy.y=0;jb.style.display='block';jb.style.left=e.clientX+'px';jb.style.top=e.clientY+'px';jk.style.transform='';jz.setPointerCapture(e.pointerId);$('joyHint').hidden=true;});
-jz.addEventListener('pointermove',e=>{if(!joy.on||e.pointerId!==joy.id)return;let dx=e.clientX-joy.ox,dy=e.clientY-joy.oy;const d=Math.hypot(dx,dy),m=52;if(d>m*1.6){joy.ox+=dx*(1-m*1.6/d);joy.oy+=dy*(1-m*1.6/d);jb.style.left=joy.ox+'px';jb.style.top=joy.oy+'px';dx=e.clientX-joy.ox;dy=e.clientY-joy.oy;}const d2=Math.hypot(dx,dy);if(d2>m){dx*=m/d2;dy*=m/d2;}joy.x=dx/m;joy.y=dy/m;jk.style.transform=`translate(${dx}px,${dy}px)`;jb.classList.toggle('run',Math.hypot(joy.x,joy.y)>.93);});
+jz.addEventListener('pointermove',e=>{if(!joy.on||e.pointerId!==joy.id)return;let dx=e.clientX-joy.ox,dy=e.clientY-joy.oy;const d=Math.hypot(dx,dy),m=52;if(d>m*1.6){joy.ox+=dx*(1-m*1.6/d);joy.oy+=dy*(1-m*1.6/d);jb.style.left=joy.ox+'px';jb.style.top=joy.oy+'px';dx=e.clientX-joy.ox;dy=e.clientY-joy.oy;}const d2=Math.hypot(dx,dy);if(d2>m){dx*=m/d2;dy*=m/d2;}joy.x=dx/m;joy.y=dy/m;jk.style.transform=`translate(${dx}px,${dy}px)`;});
 const joyEnd=e=>{if(e.pointerId!==joy.id)return;joy.on=false;joy.x=joy.y=0;jb.style.display='none';jb.classList.remove('run');};
 jz.addEventListener('pointerup',joyEnd);jz.addEventListener('pointercancel',joyEnd);
 $('tSprint').addEventListener('pointerdown',e=>{e.preventDefault();touchSprint=true;$('tSprint').classList.add('on');});
-['pointerup','pointercancel','pointerleave'].forEach(t=>$('tSprint').addEventListener(t,()=>{touchSprint=false;$('tSprint').classList.remove('on');}));
+['pointerup','pointercancel','pointerleave','lostpointercapture'].forEach(t=>$('tSprint').addEventListener(t,()=>{touchSprint=false;$('tSprint').classList.remove('on');}));
 $('tThrow').addEventListener('pointerdown',e=>{e.preventDefault();if(state==='play')throwCan();});
 
 /* ---------------- camera ---------------- */
@@ -976,11 +1017,11 @@ let mapView=false, titleOrbit=0;
 function toggleMap(){mapView=!mapView;$('bMap').textContent=mapView?'🎯':'🗺';SFX.blip();}
 function updCamera(dt,snap=false){
   let tx,tz,oy,oz;
-  const aspect=innerWidth/innerHeight, narrow=aspect<1;
+  const aspect=innerWidth/innerHeight, narrow=aspect<1, short=!narrow&&innerHeight<520;
   if(G.cine&&state!=='play'){tx=G.cine.x;tz=G.cine.z;oy=G.cine.oy;oz=G.cine.oz;}
   else if(state==='title'||state==='load'){titleOrbit+=dt*.05;tx=36+Math.sin(titleOrbit)*6;tz=18;oy=52;oz=34;}
-  else if(mapView){tx=34;tz=19;oy=narrow?100:66;oz=narrow?30:26;}
-  else{tx=player.x+player.vx*.32;tz=player.z+player.vz*.32;oy=narrow?25:19;oz=narrow?9.5:10.5;}
+  else if(mapView){tx=34;tz=19;oy=narrow?100:short?58:66;oz=narrow?30:short?20:26;}
+  else{tx=player.x+player.vx*.32;tz=player.z+player.vz*.32;oy=narrow?25:short?21:19;oz=narrow?9.5:short?9:10.5;}
   const k=snap?1:1-Math.pow(.006,dt);
   camT.lerp(new THREE.Vector3(tx,0,tz-1),k);camPos.lerp(new THREE.Vector3(tx,oy,tz+oz),k);
   camera.position.copy(camPos);
@@ -1015,7 +1056,7 @@ function hud(){
   const obj=G.hasBag?'<b>目标</b> 带着相机包去左上角入口坡道':G.pick>0?`<b>拿包中</b> ${Math.round(G.pick/1*100)}%`:'<b>目标</b> 找到 ZRH 的相机包（右半边车位）';
   const s=obj+'|'+G.t.toFixed(1)+'|'+G.cansLeft+'|'+G.tagN+'|'+G.spotted;
   if(s!==lastHud){lastHud=s;$('hObj').innerHTML=obj;$('hTime').textContent=G.t.toFixed(1)+'s';$('hCan').textContent='🥫 '+G.cansLeft;$('hTag').textContent='🏷 '+G.tagN+'/3';$('hSpot').textContent='👁 '+G.spotted;}
-  const f=$('stFill');f.style.width=(player.st*100).toFixed(0)+'%';f.classList.toggle('low',player.tired);
+  const f=$('stFill');f.style.width=(player.st*100).toFixed(0)+'%';f.classList.toggle('low',player.tired);$('tSprint').classList.toggle('tired',player.tired);
   const chase=guards.some(g=>g.state==='chase'),warn=guards.some(g=>g.sus>.3);
   $('vign').className=chase?'on':warn?'warn':'';
   const st=chase?'🔴 被追！':warn?'🟡 被注意':'🟢 隐蔽';if($('hState').textContent!==st)$('hState').textContent=st;
@@ -1038,11 +1079,13 @@ function updPlayer(dt){
   if(joy.on){mx+=joy.x;mz+=joy.y;}
   let m=Math.hypot(mx,mz);if(m>1){mx/=m;mz/=m;m=1;}
   if(m<.15)m=0;
-  const wantSprint=(keys.has('shift')||touchSprint||(joy.on&&Math.hypot(joy.x,joy.y)>.93))&&m>0;
+  const sprintHeld=keys.has('shift')||touchSprint;
+  if(!sprintHeld)player.lock=false; // 体力耗尽后必须松开再按才能重新冲刺
+  const wantSprint=sprintHeld&&m>0;
   const drain=perk==='shoes'?1/3.6:1/2.5;
   if(player.tired&&player.st>.35)player.tired=false;
-  player.sprint=wantSprint&&!player.tired&&player.stun<=0;
-  if(player.sprint){player.st-=dt*drain;if(player.st<=0){player.st=0;player.tired=true;}}
+  player.sprint=wantSprint&&!player.tired&&!player.lock&&player.stun<=0;
+  if(player.sprint){player.st-=dt*drain;if(player.st<=0){player.st=0;player.tired=true;player.lock=true;}}
   else player.st=Math.min(1,player.st+dt*(m?.2:.3));
   if(player.stun>0){player.stun-=dt;m=0;}
   const spd=player.sprint?5.6:3.4;
@@ -1081,7 +1124,8 @@ function show(id){screens.forEach(s=>$(s).hidden=(s!==id));}
 function setPlaying(on){$('hud').hidden=!on;mini.hidden=!on;document.body.classList.toggle('playing',on);if(!on){$('vign').className='';guards.forEach(g=>{g.el.hidden=true;g.gm.hidden=true;});$('banner').classList.remove('on');$('phone').classList.remove('on');}}
 function newRun(){
   Object.assign(G,{t:0,spotted:0,hasBag:false,pick:0,tagN:0,cansLeft:perk==='cans'?5:2,over:false,spawnT:3,msgNear:false,noBagT:0,cine:null,shake:0});setFace(ruiNpc,'normal');
-  Object.assign(player,{x:35,z:42.2,vx:0,vz:0,ang:Math.PI,st:1,tired:false,stun:0,stepT:0});
+  touchSprint=false;$('tSprint').classList.remove('on');
+  Object.assign(player,{lock:false,x:35,z:42.2,vx:0,vz:0,ang:Math.PI,st:1,tired:false,stun:0,stepT:0});
   movers.forEach(c=>scene.remove(c.g));movers.length=0;cans.forEach(c=>scene.remove(c.m));cans.length=0;
   resetGuards();placeItems();mapView=false;$('bMap').textContent='🗺';
   ruiNpc.visible=true;
@@ -1153,7 +1197,8 @@ function frame(now){
   if(state==='play'||state==='end')placeBubbles();
   requestAnimationFrame(frame);
 }
-function resize(){renderer.setSize(innerWidth,innerHeight,false);camera.aspect=innerWidth/innerHeight;camera.fov=innerWidth<innerHeight?58:42;camera.updateProjectionMatrix();}
+function resize(){renderer.setSize(innerWidth,innerHeight,false);camera.aspect=innerWidth/innerHeight;camera.fov=innerWidth<innerHeight?58:innerHeight<520?50:42;camera.updateProjectionMatrix();}
+addEventListener('orientationchange',()=>setTimeout(resize,250));
 addEventListener('resize',resize);
 
 /* =====================================================================
@@ -1171,16 +1216,16 @@ function vnNext(){
   if(!vn)return;
   vn.i++;let s=vn.script[vn.i];
   while(s&&s.if&&!s.if()){vn.i++;s=vn.script[vn.i];}
-  if(!s){const d=vn.done;vn=null;show(null);state='end';d&&d();return;}
+  if(!s){const d=vn.done;vn=null;$('sVN').classList.remove('choosing');show(null);state='end';d&&d();return;}
   if(s.time){$('vTime').textContent=s.time;return vnNext();}
   if(s.run){s.run();return vnNext();}
   if(s.choice){
     const box=$('vChoices');box.innerHTML='';box.hidden=false;$('vNext').hidden=true;
     s.choice.forEach(o=>{const b=document.createElement('button');b.innerHTML=o.t+(o.sub?`<small>${o.sub}</small>`:'')+(o.last?'<small>⭐ 上次选的</small>':'');b.onclick=ev=>{ev.stopPropagation();box.hidden=true;SFX.pick();o.go&&o.go();if(vn.skipAll)vn.i=vn.script.length;vnNext();};box.append(b);});
-    $('vName').className='vname narr';$('vText').className='vtext narr';$('vText').textContent='选一件装备带上：';
+    const h=document.createElement('div');h.className='chead';h.textContent='选一件装备带上';box.prepend(h);$('sVN').classList.add('choosing');
     setTimeout(()=>box.querySelector('button')?.focus(),50);return;
   }
-  $('vChoices').hidden=true;
+  $('vChoices').hidden=true;$('sVN').classList.remove('choosing');
   const who=s.who||'narr', text=typeof s.t==='function'?s.t():s.t;
   const nm=$('vName');nm.className='vname '+who;nm.textContent=s.name||NAMES[who]||'';
   $('vText').className='vtext'+(who==='narr'?' narr':'');

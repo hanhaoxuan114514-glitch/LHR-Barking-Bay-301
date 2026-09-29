@@ -77,6 +77,11 @@ a.brow{text-decoration:none;box-sizing:border-box}
 @media (max-width:520px){.bhead,.brow{grid-template-columns:62px 1fr 76px;gap:8px;padding:10px 12px}.fl{font-size:13px}.dest b{font-size:15px}.st{font-size:10.5px}}
 @media (prefers-reduced-motion:reduce){.st.ok i{animation:none}}
 
+.intro{background:rgba(10,12,26,.62);border:1.5px solid rgba(255,210,0,.35);border-radius:12px;padding:12px 16px;color:rgba(255,255,255,.86);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+.intro-h{font:700 11px "JetBrains Mono",monospace;letter-spacing:.14em;color:#ffd200;margin-bottom:6px}
+.intro p{margin:0;font-size:13.5px;line-height:1.75;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.intro.open p{-webkit-line-clamp:unset;display:block}
+.intro-f{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:8px;font:700 12px "JetBrains Mono",monospace;color:rgba(255,255,255,.55)}
 /* account + leaderboard */
 .menu{justify-content:flex-start}
 .fidsbox{margin-block:auto}
@@ -178,6 +183,11 @@ h2{margin:0;font-family:var(--display);font-weight:400;font-size:clamp(34px,9vw,
         <h1 class="mt-cn"><span style="display:inline-block">伦敦希思罗</span><span style="display:inline-block">机场传奇</span></h1>
         <div class="mt-en">London Heathrow Airport Legend</div>
         <div class="mt-sub">希思罗拍机小游戏合集 · 每一班航班都是一个独立的小游戏<br>A collection of planespotting mini-games</div>
+      </div>
+      <div class="intro" id="intro">
+        <div class="intro-h">游戏介绍 · ABOUT THE GAME</div>
+        <p id="introTxt">你说的对，但是《伦敦希思罗国际机场》是由伦敦市政府自主研发的一款全新开放世界冒险真人快打MMORPG。游戏发生在一个被称作「大英」的幻想世界，在这里，被神选中的人将被授予「相机」，导引拍飞机之力。你将扮演一位名为「飞友」的神秘角色，在自由的旅行中邂逅性格各异、能力独特的居士们，和他们一起解决好货，找回London Heathrow Airport曾经的荣耀——同时，逐步发掘「白给」的真相。因为你的素养很差，我现在每天拍飞机都能赔进去514块人民币，每个月差不多24张图片的收入， 也就是现实生活中每个月0美元的收入水平，换算过来最少也0人民币，虽然我只有16岁，但是已经落后于大英绝大多数人(包括你)的水平，这便是拍飞机给我的自卑的资 本。</p>
+        <div class="intro-f"><button class="linkbtn" id="bIntro" aria-expanded="false">展开全文</button><span>—— wrote by SKDD</span></div>
       </div>
       <div class="board" role="list">
         <div class="bhead"><span>航班 FLIGHT</span><span>游戏 GAME</span><span>状态 STATUS</span></div>
@@ -1138,6 +1148,7 @@ async function setUser(u){
 }
 
 document.querySelectorAll('.lbtab').forEach(b=>{b.classList.toggle('on',b.dataset.g===lbGame);b.onclick=()=>{lbGame=b.dataset.g;lsSet('lhr_lb',lbGame);document.querySelectorAll('.lbtab').forEach(x=>x.classList.toggle('on',x===b));loadLB();};});
+$('bIntro').onclick=()=>{const o=$('intro').classList.toggle('open');$('bIntro').textContent=o?'收起':'展开全文';$('bIntro').setAttribute('aria-expanded',o);};
 async function loadLB(){
   if(!sb)return;
   const g=lbGame;const {data,error}=await sb.from('leaderboard').select('user_id,nickname,time_s,cams,hits').eq('game',g).order('time_s',{ascending:true}).limit(10);
