@@ -312,3 +312,22 @@ body.leaving::after{opacity:1}
 .vstamp b{font-family:"Barlow",sans-serif}
 .vstamp.on{animation:stampIn .45s cubic-bezier(.2,1.4,.4,1) forwards}
 @keyframes stampIn{to{opacity:1;transform:rotate(-12deg) scale(1)}}
+
+/* 标题页：两种模式的大按钮 */
+.modes{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.mode{appearance:none;cursor:pointer;display:flex;align-items:center;gap:12px;text-align:left;padding:14px 16px;min-height:72px;border-radius:12px;font-family:var(--body);transition:transform .14s var(--ease),background .2s,border-color .2s,box-shadow .2s}
+.mode-ic{flex:none;display:grid;place-items:center;width:42px;height:42px;border-radius:9px}
+.mode-ic .ic{width:24px;height:24px}
+.mode-txt b{display:block;font:800 19px/1.2 var(--body)}
+.mode-txt small{display:block;font:600 12.5px/1.4 var(--body);margin-top:3px;opacity:.8}
+.mode-play{background:var(--sign);color:var(--sign-ink);border:0}
+.mode-play .mode-ic{background:var(--sign-ink);color:var(--sign)}
+.mode-play:hover{background:var(--sign-hi);box-shadow:0 10px 26px rgba(255,209,0,.25);transform:translateY(-1px)}
+.mode-story{background:rgba(47,211,192,.1);color:#fff;border:2px solid #2fd3c0}
+.mode-story .mode-ic{background:#2fd3c0;color:#06231f}
+.mode-story small{color:#9eeee4;opacity:1}
+.mode-story:hover{background:rgba(47,211,192,.2);box-shadow:0 10px 26px rgba(47,211,192,.2);transform:translateY(-1px)}
+.mode:active{transform:translateY(1px) scale(.985)}
+.mode:focus-visible{outline:3px solid #fff;outline-offset:2px}
+@media (max-width:520px){.modes{grid-template-columns:1fr}}
+@media (orientation:landscape) and (max-height:520px){.mode{min-height:56px;padding:9px 12px}.mode-txt b{font-size:16px}.mode-ic{width:34px;height:34px}}

@@ -31,6 +31,7 @@
     check: '<path d="M20 6 9 17l-5-5"/>',
     lock: '<rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/>',
     user: '<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>',
+    book: '<path d="M2 4h6a4 4 0 0 1 4 4v13a3 3 0 0 0-3-3H2z"/><path d="M22 4h-6a4 4 0 0 0-4 4v13a3 3 0 0 1 3-3h7z"/>',
     runner: '<circle cx="14" cy="4" r="2"/><path d="m6 22 4-7 3 2v5M8 11l3-4 4 2 3 3M11 7l-2 5 4 3"/>'
   };
   function svg(name, cls) {
@@ -82,7 +83,7 @@
     const el = e.target.closest('button,a.brow,a.back,.lbtab');
     if (!el || el.disabled || el.closest('#touch')) return;
     if (el.matches('.back,[id^="bMenu"],#bLoginClose,#bShareClose,.achievement-close')) sfx.back();
-    else if (el.matches('.go:not(.alt),.brow,.choices button')) sfx.select();
+    else if (el.matches('.go:not(.alt),.brow,.mode,.choices button')) sfx.select();
     else if (el.matches('.btn-ic,.lbtab')) sfx.toggle();
     else sfx.tap();
   }, true);

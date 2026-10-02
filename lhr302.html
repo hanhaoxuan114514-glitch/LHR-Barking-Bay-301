@@ -234,6 +234,10 @@ body.touch .btn-ic{width:40px;height:40px}
       <div class="kicker">LHR302 · 2 号航站楼 · 顶层停车场</div>
       <h1>T2 夜行<small>Terminal 2 · 潜入停车楼顶层</small></h1>
       <p class="story">STEVEN 第一次来伦敦。来接机的姐姐 ZRH 被 security 赶出了停车楼顶层，她的相机包还落在里面。从航站楼出口溜上楼顶，找到相机包，再避开巡逻的 security，赶到左上角的车辆入口坡道和她会合。</p>
+      <div class="modes">
+        <button class="mode mode-play" id="bStart"><span class="mode-ic" data-icon="runner"></span><span class="mode-txt"><b>开始游戏</b><small>边玩边看 · 潜入停车楼</small></span></button>
+        <button class="mode mode-story" id="bStory"><span class="mode-ic" data-icon="book"></span><span class="mode-txt"><b>剧情纯享版</b><small>只看剧情不游玩 · 约 10 分钟</small></span></button>
+      </div>
       <dl class="keys">
         <dt class="kb"><span class="kbd">W</span><span class="kbd">A</span><span class="kbd">S</span><span class="kbd">D</span> / 方向键</dt><dd class="kb">移动</dd>
         <dt class="kb"><span class="kbd">Shift</span></dt><dd class="kb">冲刺：更快，但有脚步声，会耗体力</dd>
@@ -246,7 +250,7 @@ body.touch .btn-ic{width:40px;height:40px}
         <dt data-icon="meter"></dt><dd>security 头顶的黄条满了就会来追你，躲进掩护让它降下去</dd>
       </dl>
       <div class="perkline" id="perkLine" hidden></div>
-      <div class="row"><button class="go" id="bStart">出发！</button></div>
+      
       <div class="best">每次出发前都会播放开场剧情，随时可以点右上角「跳过剧情」。</div>
       <div class="best" id="bestT"></div>
       <button class="linkbtn achievement-win" data-achievements>成就 0/2</button>
@@ -1182,13 +1186,13 @@ function win(){
   if(!best||G.t<best){best=G.t;lsSet('lhr302_best',String(best));}
   const result={time:G.t,tags:G.tagN,spotted:G.spotted,perk};
   try{STORY.onArrive(result);}catch(e){}
-  setTimeout(()=>{setPlaying(false);playVN(winScript(),()=>showWin());},700);
+  setTimeout(()=>{setPlaying(false);ch2Pick='';playVN([...winScript(),...(STORY.ready?STORY.nextChapter:[{who:'narr',t:'未完待续 · To be continued'}])],()=>showWin(),undefined,true);},700);
 }
 function showWin(){
   $('wTime').textContent=G.winTime.toFixed(1);$('wTag').textContent=G.tagN+'/3';$('wSpot').textContent=G.spotted;
   $('wRank').textContent=G.spotted===0?(G.tagN===3?'完美幽灵 · 全收集':'幽灵 · 一次都没被发现'):G.spotted<=2?'老练潜入者':'惊险过关';
   $('wBest').textContent=`你的最快纪录：${best.toFixed(1)} 秒`;
-  const nx=!!(STORY.ready||STORY.nextUrl);$('bNext').textContent=nx?'后续剧情':'后续剧情 · 制作中';$('bNext').className='go '+(nx?'gold':'alt');
+  const nx=!!(STORY.ready||STORY.nextUrl);$('bNext').textContent=nx?'重看第二章':'后续剧情 · 制作中';$('bNext').className='go alt';
   show('sWin');submitScore();
 }
 
@@ -1247,7 +1251,7 @@ addEventListener('resize',resize);
    ===================================================================== */
 const NAMES={you:'STEVEN',rui:'ZRH',dave:'Dave · 安保主管',guard:'Security'};
 let vn=null,typing=null;
-function playVN(script,done,time){vn={script,i:-1,done};$('vTime').textContent=time||'21:47 · LHR T2';['pL','pR'].forEach(i=>{$(i).classList.remove('show','dim');});show('sVN');state='vn';vnNext();}
+function playVN(script,done,time,sceneSkip){vn={script,i:-1,done,sceneSkip:!!sceneSkip};$('vTime').textContent=time||'21:47 · LHR T2';['pL','pR'].forEach(i=>{$(i).classList.remove('show','dim');});show('sVN');state='vn';vnNext();}
 function vnNext(){
   if(!vn)return;
   vn.i++;let s=vn.script[vn.i];
@@ -1278,7 +1282,12 @@ function vnNext(){
 function stamp(n){const el=$('vStamp');el.innerHTML='白给 <b>×'+n+'</b>';el.classList.remove('on');void el.offsetWidth;el.classList.add('on');beep(196,.35,'sawtooth',.05,-60);beep(147,.5,'sawtooth',.045,-40,.12);clearTimeout(stamp._t);stamp._t=setTimeout(()=>el.classList.remove('on'),2600);}
 function vnAdvance(){if(!vn)return;if(!$('vChoices').hidden)return;if(typing){clearInterval(typing);typing=null;$('vText').textContent=vn.full;$('vNext').hidden=false;return;}vnNext();}
 $('sVN').addEventListener('click',e=>{if(e.target.closest('.vtop')||e.target.closest('.choices'))return;vnAdvance();});
-function vnSkip(){if(!vn)return;clearInterval(typing);typing=null;vn.skipAll=true;
+function vnSkip(){if(!vn)return;clearInterval(typing);typing=null;
+  if(vn.sceneSkip){ // 长剧情：跳到下一场（或下一个选项），不直接跳完
+    if(!$('vChoices').hidden)return;
+    for(let j=vn.i+1;j<vn.script.length;j++){const s=vn.script[j];if(s.if&&!s.if())continue;if(s.run)s.run();if(s.time||s.choice){vn.i=j-1;vnNext();return;}}
+    vn.i=vn.script.length;vnNext();return;}
+  vn.skipAll=true;
   if(!$('vChoices').hidden)return; // 已经在选项上：选完直接开始
   // 跳过剧情：如果后面有装备选项，直接跳到选项；选完立即结束
   for(let j=vn.i+1;j<vn.script.length;j++){const s=vn.script[j];if(s.run&&(!s.if||s.if()))s.run();if(s.choice&&(!s.if||s.if())){vn.i=j-1;vnNext();return;}}
@@ -1338,7 +1347,6 @@ function winScript(){
     {who:'rui',face:'normal',t:'快，上车。时间差不多了——'},
     {who:'narr',t:'远处，27L 的进近灯亮成一条线。一个巨大的影子正压低高度，缓缓滑向跑道。'},
     {who:'rui',face:'surprised',t:'……来了。'},
-    {who:'narr',t:'未完待续 · To be continued'},
   ];
 }
 /* =====================================================================
@@ -1570,6 +1578,19 @@ function toTitle(){state='title';setPlaying(false);newRun();show('sTitle');refre
 function refreshTitle(){$('bestT').textContent=best?`你的最快纪录：${best.toFixed(1)} 秒`:'';const pl=$('perkLine');if(perk&&PERKS[perk]){pl.hidden=false;pl.innerHTML=LHRUI.svg(PERKS[perk].icon)+'<span>'+PERKS[perk].line+'</span>';}else pl.hidden=true;}
 function startWithIntro(){ac();setPlaying(false);newRun();G.cine=null;state='title';playVN(INTRO,startPlay);}
 $('bStart').onclick=startWithIntro;
+/* 剧情纯享版：开场 → 潜入过程旁白 → 会合 → 第二章，不进入游玩 */
+const BRIDGE=[
+  {time:'21:52 · T2 停车楼顶层'},
+  {who:'narr',t:'STEVEN 从航站楼出口溜上了顶层。红色的扇形视线在车顶之间来回扫。',clear:true},
+  {who:'narr',t:'他贴着一排车蹲下，等巡逻的 security 转身，再一个车位一个车位地往右边挪。'},
+  {who:'you',face:'surprised',t:'（右半边……有黄色光柱的那个空车位。找到了！）'},
+  {who:'narr',t:'相机包比想象中沉。他把它抱在怀里，绕开立柱，沿着顶部车道往左上角跑。'},
+  {who:'rui',face:'happy',t:'看到车灯闪了吗？就是我！'},
+  {run:()=>{G.cine={x:5,z:-2.5,oy:11,oz:9};player.x=5;player.z=-1.2;player.ang=Math.PI;player.mesh.position.set(5,0,-1.2);player.mesh.rotation.y=Math.PI;}},
+];
+function storyOnly(){ac();setPlaying(false);newRun();G.cine=null;G.winTime=96;G.spotted=0;G.tagN=0;ch2Pick='';state='title';
+  playVN([...INTRO,...BRIDGE,...winScript(),...STORY.nextChapter],()=>{G.cine=null;toTitle();},undefined,true);}
+$('bStory').onclick=storyOnly;
 $('bResume').onclick=resume;
 $('bRestart').onclick=startWithIntro;
 $('bPause').onclick=()=>state==='play'?pause():resume();
