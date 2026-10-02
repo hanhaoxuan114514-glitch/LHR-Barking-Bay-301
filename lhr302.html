@@ -2,7 +2,7 @@
 <title>T2 夜行 · 希思罗机场传奇</title>
 <link rel="stylesheet" href="achievements.css">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=ZCOOL+QingKe+HuangYou&family=Bebas+Neue&family=JetBrains+Mono:wght@700&family=Noto+Sans+SC:wght@500;900&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=ZCOOL+QingKe+HuangYou&family=Bebas+Neue&family=JetBrains+Mono:wght@700&family=Noto+Sans+SC:wght@500;700;900&family=Barlow:wght@500;600;700;800&family=Barlow+Condensed:wght@600;700;800&display=swap">
 <style>
 :root{
   color-scheme: dark;
@@ -190,6 +190,7 @@ body.touch .btn-ic{width:40px;height:40px}
 @media (max-width:620px){.por{height:62vh;max-width:62vw}#pL{left:-6vw}#pR{right:-6vw}.vbox{min-height:118px;padding:24px 14px 14px}}
 @media (prefers-reduced-motion:reduce){.vnext{animation:none}}
 </style>
+<link rel="stylesheet" href="ui.css">
 </head>
 <body>
 <div id="app">
@@ -202,16 +203,16 @@ body.touch .btn-ic{width:40px;height:40px}
     <div class="hrow">
       <span class="stat obj" id="hObj">目标</span>
       <span class="stat" id="hTime">0.0s</span>
-      <button class="btn-ic" id="bMap" aria-label="俯瞰地图">🗺</button>
-      <button class="btn-ic" id="bMute" aria-label="声音">🔊</button>
-      <button class="btn-ic" id="bPause" aria-label="暂停">❚❚</button>
+      <button class="btn-ic" id="bMap" aria-label="俯瞰地图" data-icon="map"></button>
+      <button class="btn-ic" id="bMute" aria-label="声音"></button>
+      <button class="btn-ic" id="bPause" aria-label="暂停" data-icon="pause"></button>
     </div>
     <div class="hrow">
-      <span class="stat" id="hState">🟢 隐蔽</span>
-      <div class="stam"><span class="stat">⚡</span><div class="dbar"><div class="dfill" id="stFill"></div></div></div>
-      <span class="stat" id="hCan">🥫 0</span>
-      <span class="stat" id="hTag">🏷 0/3</span>
-      <span class="stat" id="hSpot">👁 0</span>
+      <span class="stat" id="hState"><i class="dot"></i>隐蔽</span>
+      <div class="stam"><span class="stat" data-icon="bolt"></span><div class="dbar"><div class="dfill" id="stFill"></div></div></div>
+      <span class="stat" data-icon="can"><b id="hCan">0</b></span>
+      <span class="stat" data-icon="tag"><b id="hTag">0/3</b></span>
+      <span class="stat" data-icon="eye"><b id="hSpot">0</b></span>
     </div>
   </div>
   <canvas id="mini" width="400" height="232" hidden aria-label="小地图"></canvas>
@@ -220,7 +221,7 @@ body.touch .btn-ic{width:40px;height:40px}
 
   <div id="touch">
     <div id="joy"><div id="joyBase"><div id="joyKnob"></div></div></div>
-    <div id="joyHint">← 左半屏按住拖动移动</div>
+    <div id="joyHint">左半屏按住拖动移动</div>
     <button class="tbtn" id="tSprint">冲刺</button>
     <button class="tbtn" id="tThrow">扔罐</button>
   </div>
@@ -229,7 +230,7 @@ body.touch .btn-ic{width:40px;height:40px}
 
   <div class="screen" id="sTitle" hidden>
     <div class="card">
-      <a class="back" href="./">← 返回航班列表 All games</a>
+      <a class="back" href="./" data-icon="arrowLeft">返回航班列表</a>
       <div class="kicker">LHR302 · 2 号航站楼 · 顶层停车场</div>
       <h1>T2 夜行<small>Terminal 2 · 潜入停车楼顶层</small></h1>
       <p class="story">STEVEN 第一次来伦敦。来接机的姐姐 ZRH 被 security 赶出了停车楼顶层，她的相机包还落在里面。从航站楼出口溜上楼顶，找到相机包，再避开巡逻的 security，赶到左上角的车辆入口坡道和她会合。</p>
@@ -238,17 +239,17 @@ body.touch .btn-ic{width:40px;height:40px}
         <dt class="kb"><span class="kbd">Shift</span></dt><dd class="kb">冲刺：更快，但有脚步声，会耗体力</dd>
         <dt class="kb"><span class="kbd">E</span> / <span class="kbd">空格</span></dt><dd class="kb">往前扔易拉罐（地上的黄圈是落点），把 security 引过去</dd>
         <dt class="kb"><span class="kbd">M</span></dt><dd class="kb">俯瞰整个停车楼</dd>
-        <dt class="tc">🕹 左半屏</dt><dd class="tc">按住拖动移动</dd>
-        <dt class="tc">右下按钮</dt><dd class="tc">「冲刺」按住加速（体力耗尽后要松开再按），「扔罐」往前扔易拉罐</dd>
-        <dt class="tc">🗺</dt><dd class="tc">右上角按钮：俯瞰整个停车楼</dd>
-        <dt>👁</dt><dd>红色扇形是 security 的视野，车和立柱能挡住视线</dd>
-        <dt>🟨</dt><dd>security 头顶的黄条满了就会来追你，躲进掩护让它降下去</dd>
+        <dt class="tc" data-icon="joystick">左半屏</dt><dd class="tc">按住拖动移动</dd>
+        <dt class="tc" data-icon="hand">右下按钮</dt><dd class="tc">「冲刺」按住加速（体力耗尽后要松开再按），「扔罐」往前扔易拉罐</dd>
+        <dt class="tc" data-icon="map"></dt><dd class="tc">右上角按钮：俯瞰整个停车楼</dd>
+        <dt data-icon="eye"></dt><dd>红色扇形是 security 的视野，车和立柱能挡住视线</dd>
+        <dt data-icon="meter"></dt><dd>security 头顶的黄条满了就会来追你，躲进掩护让它降下去</dd>
       </dl>
       <div class="perkline" id="perkLine" hidden></div>
       <div class="row"><button class="go" id="bStart">出发！</button></div>
       <div class="best">每次出发前都会播放开场剧情，随时可以点右上角「跳过剧情」。</div>
       <div class="best" id="bestT"></div>
-      <button class="linkbtn achievement-win" data-achievements>🏆 成就 0/2</button>
+      <button class="linkbtn achievement-win" data-achievements>成就 0/2</button>
     </div>
   </div>
 
@@ -266,7 +267,7 @@ body.touch .btn-ic{width:40px;height:40px}
       <h2>先躲一会儿</h2>
       <p class="story">Security 还在巡逻，准备好再继续。</p>
       <div class="row"><button class="go" id="bResume">继续</button><button class="go alt" id="bRestart">重新开始</button></div>
-      <a class="back" href="./">← 返回航班列表 All games</a>
+      <a class="back" href="./" data-icon="arrowLeft">返回航班列表</a>
     </div>
   </div>
 
@@ -276,7 +277,7 @@ body.touch .btn-ic{width:40px;height:40px}
       <h2 id="overTitle">被抓住了</h2>
       <p class="story" id="overText"></p>
       <div class="row"><button class="go" id="bRetry">再试一次</button><button class="go alt" id="bOverTitle">回标题</button></div>
-      <a class="back" href="./">← 返回航班列表 All games</a>
+      <a class="back" href="./" data-icon="arrowLeft">返回航班列表</a>
     </div>
   </div>
 
@@ -291,11 +292,11 @@ body.touch .btn-ic{width:40px;height:40px}
         <div><b id="wSpot">0</b><span>被发现</span></div>
       </div>
       <div class="best" id="wBest"></div>
-      <button class="linkbtn achievement-win" data-achievements>🏆 成就 0/2</button>
+      <button class="linkbtn achievement-win" data-achievements>成就 0/2</button>
       <div class="net" id="wNet"></div>
       <div class="row"><button class="go gold" id="bNext">后续剧情 ▶</button></div>
       <div class="row"><button class="go" id="bAgain">再潜一次</button><button class="go alt" id="bShare">分享</button></div>
-      <a class="back" href="./">← 返回航班列表 All games</a>
+      <a class="back" href="./" data-icon="arrowLeft">返回航班列表</a>
     </div>
   </div>
 
@@ -318,6 +319,7 @@ body.touch .btn-ic{width:40px;height:40px}
 
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}</script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script src="ui.js"></script>
 <script src="achievements.js"></script>
 <script type="module">
 import * as THREE from 'three';
@@ -1045,7 +1047,7 @@ $('tThrow').addEventListener('pointerdown',e=>{e.preventDefault();if(state==='pl
 /* ---------------- camera ---------------- */
 const camT=new THREE.Vector3(35,0,40), camPos=new THREE.Vector3(35,30,60);
 let mapView=false, titleOrbit=0;
-function toggleMap(){mapView=!mapView;$('bMap').textContent=mapView?'🎯':'🗺';SFX.blip();}
+function toggleMap(){mapView=!mapView;$('bMap').innerHTML=LHRUI.svg(mapView?'target':'map');SFX.blip();}
 function updCamera(dt,snap=false){
   let tx,tz,oy,oz;
   const aspect=innerWidth/innerHeight, narrow=aspect<1, short=!narrow&&innerHeight<520;
@@ -1086,11 +1088,11 @@ let lastHud='';
 function hud(){
   const obj=G.hasBag?'<b>目标</b> 带着相机包去左上角入口坡道':G.pick>0?`<b>拿包中</b> ${Math.round(G.pick/1*100)}%`:'<b>目标</b> 找到 ZRH 的相机包（右半边车位）';
   const s=obj+'|'+G.t.toFixed(1)+'|'+G.cansLeft+'|'+G.tagN+'|'+G.spotted;
-  if(s!==lastHud){lastHud=s;$('hObj').innerHTML=obj;$('hTime').textContent=G.t.toFixed(1)+'s';$('hCan').textContent='🥫 '+G.cansLeft;$('hTag').textContent='🏷 '+G.tagN+'/3';$('hSpot').textContent='👁 '+G.spotted;}
+  if(s!==lastHud){lastHud=s;$('hObj').innerHTML=obj;$('hTime').textContent=G.t.toFixed(1)+'s';$('hCan').textContent=G.cansLeft;$('hTag').textContent=G.tagN+'/3';$('hSpot').textContent=G.spotted;}
   const f=$('stFill');f.style.width=(player.st*100).toFixed(0)+'%';f.classList.toggle('low',player.tired);$('tSprint').classList.toggle('tired',player.tired);
   const chase=guards.some(g=>g.state==='chase'),warn=guards.some(g=>g.sus>.3);
   $('vign').className=chase?'on':warn?'warn':'';
-  const st=chase?'🔴 被追！':warn?'🟡 被注意':'🟢 隐蔽';if($('hState').textContent!==st)$('hState').textContent=st;
+  const st=chase?'bad':warn?'warn':'ok';if(hud._st!==st){hud._st=st;$('hState').innerHTML=`<i class="dot ${st}"></i>`+(chase?'被追！':warn?'被注意':'隐蔽');}
 }
 const tmpV=new THREE.Vector3();
 function placeBubbles(){guards.forEach(g=>{
@@ -1158,7 +1160,7 @@ function newRun(){
   touchSprint=false;$('tSprint').classList.remove('on');
   Object.assign(player,{lock:false,x:35,z:42.2,vx:0,vz:0,ang:Math.PI,st:1,tired:false,stun:0,stepT:0});
   movers.forEach(c=>scene.remove(c.g));movers.length=0;cans.forEach(c=>scene.remove(c.m));cans.length=0;
-  resetGuards();placeItems();mapView=false;$('bMap').textContent='🗺';
+  resetGuards();placeItems();mapView=false;$('bMap').innerHTML=LHRUI.svg('map');
   ruiNpc.visible=true;
 }
 function startPlay(){
@@ -1183,9 +1185,9 @@ function win(){
 }
 function showWin(){
   $('wTime').textContent=G.winTime.toFixed(1);$('wTag').textContent=G.tagN+'/3';$('wSpot').textContent=G.spotted;
-  $('wRank').textContent=G.spotted===0?(G.tagN===3?'👻 完美幽灵 · 全收集':'👻 幽灵 · 一次都没被发现'):G.spotted<=2?'🕶 老练潜入者':'🏃 惊险过关';
+  $('wRank').textContent=G.spotted===0?(G.tagN===3?'完美幽灵 · 全收集':'幽灵 · 一次都没被发现'):G.spotted<=2?'老练潜入者':'惊险过关';
   $('wBest').textContent=`你的最快纪录：${best.toFixed(1)} 秒`;
-  $('bNext').textContent=STORY.ready||STORY.nextUrl?'后续剧情 ▶':'后续剧情 · 制作中';
+  const nx=!!(STORY.ready||STORY.nextUrl);$('bNext').textContent=nx?'后续剧情':'后续剧情 · 制作中';$('bNext').className='go '+(nx?'gold':'alt');
   show('sWin');submitScore();
 }
 
@@ -1254,7 +1256,7 @@ function vnNext(){
   if(s.run){s.run();return vnNext();}
   if(s.choice){
     const box=$('vChoices');box.innerHTML='';box.hidden=false;$('vNext').hidden=true;
-    s.choice.forEach(o=>{const b=document.createElement('button');b.innerHTML=o.t+(o.sub?`<small>${o.sub}</small>`:'')+(o.last?'<small>⭐ 上次选的</small>':'');b.onclick=ev=>{ev.stopPropagation();box.hidden=true;SFX.pick();o.go&&o.go();if(vn.skipAll)vn.i=vn.script.length;vnNext();};box.append(b);});
+    s.choice.forEach(o=>{const b=document.createElement('button');b.innerHTML=(o.icon?`<span class="ico-box">${LHRUI.svg(o.icon)}</span>`:'')+o.t+(o.sub?`<small>${o.sub}</small>`:'')+(o.last?'<small class="last">上次选择</small>':'');b.onclick=ev=>{ev.stopPropagation();box.hidden=true;SFX.pick();o.go&&o.go();if(vn.skipAll)vn.i=vn.script.length;vnNext();};box.append(b);});
     const h=document.createElement('div');h.className='chead';h.textContent='选一件装备带上';box.prepend(h);$('sVN').classList.add('choosing');
     setTimeout(()=>box.querySelector('button')?.focus(),50);return;
   }
@@ -1281,11 +1283,11 @@ function vnSkip(){if(!vn)return;clearInterval(typing);typing=null;vn.skipAll=tru
 $('vSkip').onclick=e=>{e.stopPropagation();vnSkip();};
 
 const PERKS={
-  vest:{t:'🦺 一件荧光背心',sub:'看起来像机场工作人员：被看见时 security 起疑慢 40%',line:'你穿上了荧光背心 🦺（被看见时起疑更慢）'},
-  shoes:{t:'👟 一双软底跑鞋',sub:'冲刺没有脚步声，体力更耐用',line:'你换上了软底跑鞋 👟（冲刺无声、体力更多）'},
-  cans:{t:'🥤 一袋易拉罐',sub:'扔出去能把 security 引开：易拉罐 5 个（平时 2 个）',line:'你拎着一袋易拉罐 🥫（可以扔 5 次）'},
+  vest:{icon:'vest',t:'一件荧光背心',sub:'看起来像机场工作人员：被看见时 security 起疑慢 40%',line:'你穿上了荧光背心 · 被看见时起疑更慢'},
+  shoes:{icon:'shoe',t:'一双软底跑鞋',sub:'冲刺没有脚步声，体力更耐用',line:'你换上了软底跑鞋 · 冲刺无声、体力更多'},
+  cans:{icon:'can',t:'一袋易拉罐',sub:'扔出去能把 security 引开：易拉罐 5 个（平时 2 个）',line:'你拎着一袋易拉罐 · 可以扔 5 次'},
 };
-const perkChoice=()=>({choice:Object.entries(PERKS).map(([k,p])=>({t:p.t,sub:p.sub,last:k===perk,go:()=>{perk=k;lsSet('lhr302_perk',k);}}))});
+const perkChoice=()=>({choice:Object.entries(PERKS).map(([k,p])=>({icon:p.icon,t:p.t,sub:p.sub,last:k===perk,go:()=>{perk=k;lsSet('lhr302_perk',k);}}))});
 const INTRO=[
   {who:'narr',t:'21:47，伦敦希思罗机场 2 号航站楼。',clear:true},
   {who:'narr',t:'十一个小时的航班，入境、取行李。STEVEN 第一次来伦敦，天边还剩最后一点橘色。'},
@@ -1344,15 +1346,16 @@ function playNextChapter(){
 
 /* ---------------- buttons ---------------- */
 function toTitle(){state='title';setPlaying(false);newRun();show('sTitle');refreshTitle();}
-function refreshTitle(){$('bestT').textContent=best?`你的最快纪录：${best.toFixed(1)} 秒`:'';const pl=$('perkLine');if(perk&&PERKS[perk]){pl.hidden=false;pl.textContent=PERKS[perk].line;}else pl.hidden=true;}
+function refreshTitle(){$('bestT').textContent=best?`你的最快纪录：${best.toFixed(1)} 秒`:'';const pl=$('perkLine');if(perk&&PERKS[perk]){pl.hidden=false;pl.innerHTML=LHRUI.svg(PERKS[perk].icon)+'<span>'+PERKS[perk].line+'</span>';}else pl.hidden=true;}
 function startWithIntro(){ac();setPlaying(false);newRun();G.cine=null;state='title';playVN(INTRO,startPlay);}
 $('bStart').onclick=startWithIntro;
 $('bResume').onclick=resume;
 $('bRestart').onclick=startWithIntro;
 $('bPause').onclick=()=>state==='play'?pause():resume();
 $('bMap').onclick=()=>state==='play'&&toggleMap();
-$('bMute').onclick=()=>{muted=!muted;lsSet('lhr_mute',muted?'1':'0');$('bMute').textContent=muted?'🔇':'🔊';};
-$('bMute').textContent=muted?'🔇':'🔊';
+const setMuteUI=()=>{document.documentElement.dataset.muted=muted?'1':'0';$('bMute').innerHTML=LHRUI.svg(muted?'mute':'vol');};
+$('bMute').onclick=()=>{muted=!muted;lsSet('lhr_mute',muted?'1':'0');setMuteUI();};
+setMuteUI();
 $('bRetry').onclick=startWithIntro;
 $('bOverTitle').onclick=toTitle;
 $('bAgain').onclick=startWithIntro;

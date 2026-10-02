@@ -1,26 +1,32 @@
-.achievement-dialog{box-sizing:border-box;width:min(560px,calc(100% - 28px));max-height:calc(100dvh - 32px);padding:24px;border:2px solid #d6ac54;border-radius:18px;background:#111b2b;color:#f5f0e4;font-family:"Noto Sans SC","PingFang SC",sans-serif;box-shadow:0 24px 90px #0009;overflow:auto;touch-action:pan-y}
-.achievement-dialog::backdrop{background:#050b16bb;backdrop-filter:blur(5px)}
-.achievement-heading{display:flex;align-items:center;justify-content:space-between;gap:12px}
-.achievement-eyebrow{color:#d6ac54;font:11px monospace;letter-spacing:2px}
-.achievement-dialog h2{font:900 28px "Noto Sans SC",sans-serif;margin:6px 0;color:#fff3d0;text-shadow:none;-webkit-text-stroke:0}
-.achievement-dialog button{font:inherit;cursor:pointer;min-height:44px;border:1px solid #657187;border-radius:8px;padding:8px 14px;background:#23334a;color:#fff}
-.achievement-dialog button:focus-visible{outline:3px solid #ffda78;outline-offset:3px}
+.achievement-dialog{box-sizing:border-box;width:min(560px,calc(100% - 28px));max-height:calc(100dvh - 32px);padding:0;border:1px solid rgba(255,255,255,.14);border-top:5px solid #ffd100;border-radius:12px;background:#121826;color:#eef1f6;font-family:"Barlow","Noto Sans SC","PingFang SC",sans-serif;box-shadow:0 30px 90px #000a;overflow:auto;touch-action:pan-y}
+.achievement-dialog[open]{animation:achIn .38s cubic-bezier(.2,.8,.2,1) both}
+@keyframes achIn{from{opacity:0;transform:translateY(14px) scale(.985)}to{opacity:1;transform:none}}
+.achievement-dialog::backdrop{background:#050810c4;backdrop-filter:blur(6px)}
+.achievement-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:20px 22px 0}
+.achievement-eyebrow{display:inline-block;background:#ffd100;color:#0d0d0d;font:800 11px/1 "Barlow",sans-serif;letter-spacing:.12em;padding:6px 8px;border-radius:4px}
+.achievement-dialog h2{font:800 28px/1.15 "Barlow","Noto Sans SC",sans-serif;margin:10px 0 0;color:#fff;text-shadow:none;-webkit-text-stroke:0}
+.achievement-dialog button{font:700 14px "Barlow","Noto Sans SC",sans-serif;cursor:pointer;min-height:44px;border:1.5px solid rgba(255,255,255,.2);border-radius:9px;padding:8px 16px;background:transparent;color:#fff;transition:border-color .2s,background .2s,color .2s}
+.achievement-dialog button:hover{border-color:#ffd100;color:#ffd100}
+.achievement-dialog .achievement-login,.achievement-dialog .achievement-retry{background:#ffd100;color:#0d0d0d;border-color:#ffd100}
+.achievement-dialog .achievement-login:hover,.achievement-dialog .achievement-retry:hover{background:#ffe04d;color:#0d0d0d}
+.achievement-dialog button:focus-visible{outline:3px solid #fff;outline-offset:3px}
 .achievement-dialog button:disabled{opacity:.5;cursor:wait}
-.achievement-dialog .achievement-close{font-size:26px;line-height:1;padding:6px 13px}
-.achievement-account{font-size:12px;color:#b6c5d8;line-height:1.8;margin:12px 0 18px}
-.achievement-list{display:grid;gap:12px}
-.achievement-card{display:flex;gap:15px;padding:18px 16px;border:1px solid #364258;border-radius:12px;background:#192537}
-.achievement-icon{display:grid;place-items:center;align-self:flex-start;flex-shrink:0;width:48px;height:48px;border-radius:12px;background:#29354a;font-size:26px;filter:grayscale(1);opacity:.6}
-.achievement-card.unlocked{border-color:#b89947;background:linear-gradient(120deg,#332e20,#192537)}
-.achievement-card.unlocked .achievement-icon,.achievement-card.pending .achievement-icon{filter:none;opacity:1;background:#574721}
-.achievement-game{font:11px monospace;color:#a5b6ca;letter-spacing:.3px}
-.achievement-card h3{font-size:18px;color:#fff3d0;margin:5px 0 7px}
-.achievement-card p{font-size:12px;line-height:1.8;color:#bac5d5;margin:0}
-.achievement-status{margin-top:12px;font-size:11px;color:#a7b6c8}
-.unlocked .achievement-status,.pending .achievement-status{color:#ffda78}
-.achievement-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:18px}
-.achievement-notice{position:fixed;z-index:10000;left:50%;top:calc(env(safe-area-inset-top,0px) + 14px);transform:translate(-50%,-140%);width:max-content;max-width:calc(100% - 40px);box-sizing:border-box;padding:13px 18px;border:1px solid #d6ac54;border-radius:12px;background:#152134f5;color:#ffdf8a;font:700 13px/1.6 "Noto Sans SC",sans-serif;box-shadow:0 8px 32px #0008;pointer-events:none;opacity:0;transition:transform .25s,opacity .25s;text-align:center}
+.achievement-dialog .achievement-close{font-size:24px;line-height:1;padding:6px 13px;min-width:44px}
+.achievement-account{font-size:13px;color:#b7c0cf;line-height:1.7;margin:10px 22px 16px}
+.achievement-list{display:grid;gap:10px;padding:0 22px}
+.achievement-card{display:flex;gap:14px;padding:16px;border:1px solid rgba(255,255,255,.1);border-radius:10px;background:#0c111c;transition:border-color .3s,background .3s}
+.achievement-icon{display:grid;place-items:center;align-self:flex-start;flex-shrink:0;width:48px;height:48px;border-radius:9px;background:#1d2536;color:#6b778a}
+.achievement-icon svg{width:26px;height:26px}
+.achievement-card.unlocked{border-color:rgba(255,209,0,.55);background:linear-gradient(120deg,rgba(255,209,0,.1),#0c111c 60%)}
+.achievement-card.unlocked .achievement-icon,.achievement-card.pending .achievement-icon{background:#ffd100;color:#0d0d0d}
+.achievement-game{font:700 11px "JetBrains Mono",monospace;color:#7f8a9c;letter-spacing:.04em}
+.achievement-card h3{font:800 18px "Barlow","Noto Sans SC",sans-serif;color:#fff;margin:4px 0 6px}
+.achievement-card p{font-size:13px;line-height:1.7;color:#b7c0cf;margin:0}
+.achievement-status{display:inline-block;margin-top:10px;font:700 12px "Barlow","Noto Sans SC",sans-serif;color:#7f8a9c;border:1px solid rgba(255,255,255,.14);border-radius:5px;padding:4px 8px}
+.unlocked .achievement-status,.pending .achievement-status{color:#0d0d0d;background:#ffd100;border-color:#ffd100}
+.achievement-actions{display:flex;justify-content:flex-end;gap:10px;margin:18px 22px 22px}
+.achievement-notice{position:fixed;z-index:10000;left:50%;top:calc(env(safe-area-inset-top,0px) + 14px);transform:translate(-50%,-140%);width:max-content;max-width:calc(100% - 40px);box-sizing:border-box;padding:12px 18px;border:0;border-radius:10px;background:#ffd100;color:#0d0d0d;font:800 14px/1.5 "Barlow","Noto Sans SC",sans-serif;box-shadow:0 12px 36px #0009;pointer-events:none;opacity:0;transition:transform .35s cubic-bezier(.2,.8,.2,1),opacity .25s;text-align:center}
 .achievement-notice.visible{transform:translate(-50%,0);opacity:1}
-.achievement-win{display:block;margin:10px auto}
-@media(max-width:420px){.achievement-dialog{padding:18px}.achievement-card{gap:10px;padding:14px 12px}.achievement-icon{width:36px;height:40px;font-size:22px}.achievement-card h3{font-size:16px}}
-@media(prefers-reduced-motion:reduce){.achievement-notice{transition:none}}
+.achievement-win{display:inline-flex;margin:4px 0}
+@media(max-width:420px){.achievement-heading{padding:16px 16px 0}.achievement-list{padding:0 16px}.achievement-account{margin:10px 16px 14px}.achievement-actions{margin:16px}.achievement-card{gap:10px;padding:13px 12px}.achievement-icon{width:40px;height:40px}.achievement-card h3{font-size:16px}}
+@media(prefers-reduced-motion:reduce){.achievement-notice{transition:none}.achievement-dialog[open]{animation:none}}

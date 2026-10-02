@@ -1,8 +1,8 @@
 (function (root) {
   'use strict';
   const definitions = [
-    { id: 'z9-collector', key: 'lhr_achievement_z9_collector', name: 'Z9 收藏家', icon: '📷', game: 'LHR301 · ZRH快跑', description: '单次通关，收齐本局出现的全部尼康 Z9。' },
-    { id: 'tag-collector', key: 'lhr_achievement_tag_collector', name: '行李牌收藏家', icon: '🏷️', game: 'LHR302 · T2 夜行', description: '单次通关，收齐本局全部 3 张行李牌。' }
+    { id: 'z9-collector', key: 'lhr_achievement_z9_collector', name: 'Z9 收藏家', icon: 'camera', game: 'LHR301 · ZRH快跑', description: '单次通关，收齐本局出现的全部尼康 Z9。' },
+    { id: 'tag-collector', key: 'lhr_achievement_tag_collector', name: '行李牌收藏家', icon: 'tag', game: 'LHR302 · T2 夜行', description: '单次通关，收齐本局全部 3 张行李牌。' }
   ];
   const storageKey = 'lhr_achievement_pending_v1';
   const validDate = value => typeof value === 'string' && Number.isFinite(Date.parse(value));
@@ -131,7 +131,7 @@
     }
     function render(state) {
       const count = state.items.filter(item => item.status === 'unlocked').length;
-      document.querySelectorAll('[data-achievements]').forEach(button => { button.textContent = `🏆 成就 ${count}/2`; });
+      document.querySelectorAll('[data-achievements]').forEach(button => { button.innerHTML = (root.LHRUI ? root.LHRUI.svg('trophy') : '') + `<span>成就 ${count}/2</span>`; });
       dialog.querySelector('.achievement-account').textContent = !client ? '账号服务暂时无法连接，请联网后刷新页面。' : !state.loggedIn
         ? '登录后，成就会保存到账号，换设备也能查看。'
         : state.error ? '暂时无法同步。已达成的成就会保留，联网后可重试。'
@@ -139,13 +139,13 @@
       const list = dialog.querySelector('.achievement-list'); list.replaceChildren();
       for (const item of state.items) {
         const card = document.createElement('article'); card.className = 'achievement-card ' + item.status;
-        const icon = document.createElement('span'); icon.className = 'achievement-icon'; icon.textContent = item.icon;
+        const icon = document.createElement('span'); icon.className = 'achievement-icon'; if (root.LHRUI) icon.innerHTML = root.LHRUI.svg(item.icon); else icon.textContent = item.name.slice(0, 1);
         const body = document.createElement('div');
         const game = document.createElement('div'); game.className = 'achievement-game'; game.textContent = item.game;
         const title = document.createElement('h3'); title.textContent = item.name;
         const description = document.createElement('p'); description.textContent = item.description;
         const status = document.createElement('div'); status.className = 'achievement-status';
-        status.textContent = item.status === 'unlocked' ? '✓ 已解锁 · ' + new Date(item.unlockedAt).toLocaleDateString('zh-CN')
+        status.textContent = item.status === 'unlocked' ? '已解锁 · ' + new Date(item.unlockedAt).toLocaleDateString('zh-CN')
           : item.status === 'pending' ? state.loggedIn ? '已达成 · 等待同步' : '已达成 · 登录后领取' : '未解锁';
         body.append(game, title, description, status); card.append(icon, body); list.append(card);
       }
@@ -157,8 +157,8 @@
     let storage;
     try { storage = sessionStorage; } catch (_) {}
     const store = createStore({ client, url, key, storage, onChange: render,
-      onUnlock: item => notify('🏆 成就解锁：' + item.name + ' · 已保存到账号'),
-      onPending: (item, loggedIn) => notify('🏆 ' + item.name + (loggedIn ? ' · 已达成，正在保存到账号' : ' · 登录后领取成就'))
+      onUnlock: item => { root.LHRUI?.sfx.unlock(); notify('成就解锁 · ' + item.name + ' · 已保存到账号'); },
+      onPending: (item, loggedIn) => { root.LHRUI?.sfx.unlock(); notify('成就达成 · ' + item.name + (loggedIn ? ' · 正在保存到账号' : ' · 登录后领取')); }
     });
     render(store.snapshot());
     const ready = client ? client.auth.getSession().then(({ data }) => {

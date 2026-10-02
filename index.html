@@ -2,7 +2,7 @@
 <title>希思罗机场传奇</title>
 <link rel="stylesheet" href="achievements.css">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=ZCOOL+QingKe+HuangYou&family=Bebas+Neue&family=JetBrains+Mono:wght@700&family=Noto+Sans+SC:wght@500;900&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=ZCOOL+QingKe+HuangYou&family=Bebas+Neue&family=JetBrains+Mono:wght@700&family=Noto+Sans+SC:wght@500;700;900&family=Barlow:wght@500;600;700;800&family=Barlow+Condensed:wght@600;700;800&display=swap">
 <style>
 :root{
   color-scheme: dark;
@@ -154,6 +154,7 @@ h2{margin:0;font-family:var(--display);font-weight:400;font-size:clamp(34px,9vw,
 @media (orientation:portrait) and (pointer:coarse){#rot{display:block}}
 @media (prefers-reduced-motion:reduce){.danger.hot .stat{animation:none}}
 </style>
+<link rel="stylesheet" href="ui.css">
 
 <div id="app">
   <canvas id="c" aria-label="ZRH快跑 游戏画面"></canvas>
@@ -163,33 +164,38 @@ h2{margin:0;font-family:var(--display);font-weight:400;font-size:clamp(34px,9vw,
       <div class="track" aria-label="进度">
         <div class="fill" id="pfill"></div>
         <span class="mk start">301室</span>
-        <span class="mk" id="pmk">🏃</span>
-        <span class="mk end">✈ 301机坪</span>
+        <span class="mk" id="pmk" data-icon="runner"></span>
+        <span class="mk end" data-icon="plane">301机坪</span>
       </div>
-      <button class="btn-ic" id="bMute" aria-label="声音">🔊</button>
-      <button class="btn-ic" id="bPause" aria-label="暂停">❚❚</button>
+      <button class="btn-ic" id="bMute" aria-label="声音" data-icon="vol"></button>
+      <button class="btn-ic" id="bPause" aria-label="暂停" data-icon="pause"></button>
     </div>
     <div class="hrow">
       <div class="danger" id="danger"><span class="stat" id="dtext">老妈距离</span><div class="dbar"><div class="dfill" id="dfill"></div></div></div>
-      <span class="stat" id="sCam">📷 0</span>
+      <span class="stat" data-icon="camera"><b id="sCam">0</b></span>
       <span class="stat" id="sZ9">Z9 0/0</span>
       <span class="stat" id="sDist">0 / 2000 m</span>
     </div>
   </div>
 
-  <div id="touch"><span>⬇ 滑铲</span><span>跳 ⬆ 可二段</span></div>
+  <div id="touch"><span>↓ 滑铲</span><span>跳 ↑ 可二段</span></div>
 
   <!-- main menu -->
   <div class="screen menu" id="sMenu">
     <div class="fidsbox">
-      <div class="toprow"><div class="eyebrow">LHR · EGLL · 51°28′N 000°27′W</div><div class="acct"><button class="linkbtn" data-achievements>🏆 成就 0/2</button><span id="acctName">未登录</span><button class="linkbtn" id="bPw" hidden>设置密码</button><button class="linkbtn" id="bLogin">登录 Sign in</button></div></div>
-      <div class="mt">
-        <h1 class="mt-cn"><span style="display:inline-block">伦敦希思罗</span><span style="display:inline-block">机场传奇</span></h1>
-        <div class="mt-en">London Heathrow Airport Legend</div>
-        <div class="mt-sub">希思罗拍机小游戏合集 · 每一班航班都是一个独立的小游戏<br>A collection of planespotting mini-games</div>
-      </div>
+      <div class="toprow"><div class="eyebrow">LHR · EGLL · 51°28′N 000°27′W</div><div class="acct"><button class="linkbtn" data-achievements>成就 0/2</button><span id="acctName">未登录</span><button class="linkbtn" id="bPw" hidden>设置密码</button><button class="linkbtn" id="bLogin">登录 Sign in</button></div></div>
+      <header class="signhead">
+        <div class="sign">
+          <span class="sign-pict" data-icon="plane"></span>
+          <div class="sign-txt">
+            <h1 class="mt-cn"><span>伦敦希思罗</span><span>机场传奇</span></h1>
+            <div class="mt-en">London Heathrow Airport Legend</div>
+          </div>
+        </div>
+        <p class="mt-sub">希思罗拍机小游戏合集 · 每一班航班都是一个独立的小游戏 <span>A collection of planespotting mini-games</span></p>
+      </header>
       <div class="intro" id="intro">
-        <div class="intro-h">游戏介绍 · ABOUT THE GAME</div>
+        <div class="intro-h">游戏介绍 · About the game</div>
         <p id="introTxt">你说的对，但是《伦敦希思罗国际机场》是由伦敦市政府自主研发的一款全新开放世界冒险真人快打MMORPG。游戏发生在一个被称作「大英」的幻想世界，在这里，被神选中的人将被授予「相机」，导引拍飞机之力。你将扮演一位名为「飞友」的神秘角色，在自由的旅行中邂逅性格各异、能力独特的居士们，和他们一起解决好货，找回London Heathrow Airport曾经的荣耀——同时，逐步发掘「白给」的真相。因为你的素养很差，我现在每天拍飞机都能赔进去514块人民币，每个月差不多24张图片的收入， 也就是现实生活中每个月0美元的收入水平，换算过来最少也0人民币，虽然我只有16岁，但是已经落后于大英绝大多数人(包括你)的水平，这便是拍飞机给我的自卑的资 本。</p>
         <div class="intro-f"><span></span><span>—— wrote by SKDD</span></div>
       </div>
@@ -210,7 +216,7 @@ h2{margin:0;font-family:var(--display);font-weight:400;font-size:clamp(34px,9vw,
   <!-- title -->
   <div class="screen" id="sTitle" hidden>
     <div class="card">
-      <button class="back" id="bMenu1">← 返回航班列表 All games</button>
+      <button class="back" id="bMenu1" data-icon="arrowLeft">返回航班列表</button>
       <div class="kicker">一个拍机佬的逃亡</div>
       <h1>ZRH快跑！<small>目标：301 机坪</small></h1>
       <div class="panels">
@@ -222,8 +228,8 @@ h2{margin:0;font-family:var(--display);font-weight:400;font-size:clamp(34px,9vw,
         <dt><span class="kbd">空格</span><span class="kbd">↑</span></dt><dd>跳，空中再按一次二段跳</dd>
         <dt><span class="kbd">↓</span></dt><dd>滑铲，钻过晾衣杆、限高杆</dd>
         <dt>手机</dt><dd>点屏幕右边跳，左边滑铲</dd>
-        <dt>📷</dt><dd>捡 R62 和 100-400 能甩开老妈</dd>
-        <dt>⭐</dt><dd>金色 Z9：尼康 Z9 是对的，无敌冲刺 3 秒</dd>
+        <dt data-icon="camera"></dt><dd>捡 R62 和 100-400 能甩开老妈</dd>
+        <dt data-icon="star"></dt><dd>金色 Z9：尼康 Z9 是对的，无敌冲刺 3 秒</dd>
       </dl>
       <button class="go" id="bStart">开跑！</button>
       <div class="best" id="bestT"></div>
@@ -252,7 +258,7 @@ h2{margin:0;font-family:var(--display);font-weight:400;font-size:clamp(34px,9vw,
         <div><b id="oCam">0</b><span>捡到器材</span></div>
       </div>
       <div class="row"><button class="go" id="bRetry">再跑一次</button><button class="go alt" data-share="over">分享</button></div>
-      <button class="back" id="bMenu2">← 返回航班列表 All games</button>
+      <button class="back" id="bMenu2" data-icon="arrowLeft">返回航班列表</button>
     </div>
   </div>
 
@@ -270,10 +276,10 @@ h2{margin:0;font-family:var(--display);font-weight:400;font-size:clamp(34px,9vw,
       </div>
       <div class="best" id="wBest"></div>
       <div class="best" id="wZ9"></div>
-      <button class="linkbtn achievement-win" data-achievements>🏆 成就 0/2</button>
+      <button class="linkbtn achievement-win" data-achievements>成就 0/2</button>
       <div class="net" id="wNet"></div>
       <div class="row"><button class="go" id="bAgain">再跑一次</button><button class="go alt" data-share="win">分享战绩</button></div>
-      <button class="back" id="bMenu3">← 返回航班列表 All games</button>
+      <button class="back" id="bMenu3" data-icon="arrowLeft">返回航班列表</button>
     </div>
   </div>
 
@@ -303,6 +309,7 @@ h2{margin:0;font-family:var(--display);font-weight:400;font-size:clamp(34px,9vw,
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script src="ui.js"></script>
 <script src="achievements.js"></script>
 <script>
 'use strict';
@@ -432,7 +439,7 @@ function toTitle(){newGame();setState('title');show('sTitle');showBest();SFX.coi
 $('bCh1').onclick=toTitle;
 ['bMenu1','bMenu2','bMenu3'].forEach(id=>$(id).onclick=toMenu);
 $('bPause').onclick=()=>state==='play'?pause():resume();
-$('bMute').onclick=()=>{muted=!muted;$('bMute').textContent=muted?'🔇':'🔊';};
+$('bMute').onclick=()=>{muted=!muted;document.documentElement.dataset.muted=muted?'1':'0';$('bMute').innerHTML=LHRUI.svg(muted?'mute':'vol');};
 
 /* share */
 let shareFrom='title';
@@ -1064,7 +1071,7 @@ function hud(){
   const hot=g<.3&&state==='play';
   $('danger').classList.toggle('hot',hot);
   $('dtext').textContent=hot?'老妈要追上了！':'老妈距离';
-  $('sCam').textContent='📷 '+G.cams;
+  $('sCam').textContent=G.cams;
   $('sZ9').textContent='Z9 '+G.z9Collected+'/'+G.z9Total;
   $('sDist').textContent=`${Math.floor(Math.min(G.dist,GOAL)/10)} / 2000 m`;
 }
