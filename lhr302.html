@@ -1,5 +1,6 @@
 <!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
 <title>T2 夜行 · 希思罗机场传奇</title>
+<link rel="stylesheet" href="achievements.css">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=ZCOOL+QingKe+HuangYou&family=Bebas+Neue&family=JetBrains+Mono:wght@700&family=Noto+Sans+SC:wght@500;900&display=swap">
 <style>
@@ -247,6 +248,7 @@ body.touch .btn-ic{width:40px;height:40px}
       <div class="row"><button class="go" id="bStart">出发！</button></div>
       <div class="best">每次出发前都会播放开场剧情，随时可以点右上角「跳过剧情」。</div>
       <div class="best" id="bestT"></div>
+      <button class="linkbtn achievement-win" data-achievements>🏆 成就 0/2</button>
     </div>
   </div>
 
@@ -289,6 +291,7 @@ body.touch .btn-ic{width:40px;height:40px}
         <div><b id="wSpot">0</b><span>被发现</span></div>
       </div>
       <div class="best" id="wBest"></div>
+      <button class="linkbtn achievement-win" data-achievements>🏆 成就 0/2</button>
       <div class="net" id="wNet"></div>
       <div class="row"><button class="go gold" id="bNext">后续剧情 ▶</button></div>
       <div class="row"><button class="go" id="bAgain">再潜一次</button><button class="go alt" id="bShare">分享</button></div>
@@ -315,6 +318,7 @@ body.touch .btn-ic{width:40px;height:40px}
 
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}</script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script src="achievements.js"></script>
 <script type="module">
 import * as THREE from 'three';
 import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
@@ -1015,6 +1019,7 @@ const keys=new Set();
 const joy={on:false,id:null,ox:0,oy:0,x:0,y:0};
 let touchSprint=false;
 addEventListener('keydown',e=>{
+  if(document.querySelector('.achievement-dialog[open]'))return;
   const k=e.key.toLowerCase();
   if(state==='vn'){if(k===' '||k==='enter'){e.preventDefault();vnAdvance();}else if(k==='escape'||k==='s'&&e.ctrlKey){vnSkip();}return;}
   if(state!=='play'&&state!=='paused')return;
@@ -1169,6 +1174,7 @@ function caught(g){
 }
 function win(){
   G.over=true;state='end';SFX.win();G.winTime=G.t;G.cine={x:5,z:-2.5,oy:11,oz:9};
+  achievements.complete('lhr302-t3',{won:true,tagsCollected:G.tagN,tagsTotal:tags.length});
   player.x=5;player.z=-1.2;player.ang=Math.PI;player.mesh.position.set(5,0,-1.2);player.mesh.rotation.y=Math.PI;setFace(player.mesh,'happy');setFace(ruiNpc,'happy');
   if(!best||G.t<best){best=G.t;lsSet('lhr302_best',String(best));}
   const result={time:G.t,tags:G.tagN,spotted:G.spotted,perk};
@@ -1188,6 +1194,7 @@ function update(dt){
   G.t+=dt;
   updPlayer(dt);
   if(!G.noAI)guards.forEach(g=>updGuard(g,dt));
+  if(G.over)return;
   updMovers(dt);updCans(dt);updRings(dt);
   // bag pickup (stand close for 0.9s)
   if(!G.hasBag){bag.userData.ring.scale.setScalar(1+Math.sin(G.t*5)*.12);bag.rotation.y+=dt*.8;
@@ -1363,11 +1370,12 @@ $('bShare').onclick=async()=>{
 const SB_URL='https://vmglldxyaolhecraghel.supabase.co';
 const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZtZ2xsZHh5YW9saGVjcmFnaGVsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA2MDc3MTUsImV4cCI6MjEwNjE4MzcxNX0.3NYsCktuiWYDp7rG_IqQHEz2qEDGxAKMJ67Z31mJ9c0';
 const GAME='lhr302-t3';
-let sb=null,user=null,nick='',signup=false;
+let sb=null,user=null,nick='',signup=false,loginFrom='sWin';
 try{if(window.supabase)sb=window.supabase.createClient(SB_URL,SB_KEY,{auth:{persistSession:true}});}catch(e){sb=null;}
+const achievements=LHRAchievements.mount({client:sb,url:SB_URL,key:SB_KEY,onLogin:()=>{loginFrom=$('sWin').hidden?'sTitle':'sWin';setMode(false);show('sLogin');}});
 function setMode(m){signup=m;$('nickField').hidden=!m;$('loginTitle').textContent=m?'注册账号':'登录上榜';$('bSend').textContent=m?'注册并登录':'登录';$('bMode').textContent=m?'已有账号？直接登录':'没有账号？注册新账号';$('loginMsg').textContent='';}
 $('bMode').onclick=()=>setMode(!signup);
-$('bLoginClose').onclick=()=>show('sWin');
+$('bLoginClose').onclick=()=>show(loginFrom);
 $('inPass').addEventListener('keydown',e=>{if(e.key==='Enter')$('bSend').click();});
 $('bSend').onclick=async()=>{
   const n=$('inNick').value.trim(),m=$('inMail').value.trim(),p=$('inPass').value,msg=$('loginMsg');
@@ -1379,13 +1387,13 @@ $('bSend').onclick=async()=>{
   else({error}=await sb.auth.signInWithPassword({email:m,password:p}));
   $('bSend').disabled=false;
   if(error){const t=error.message||'';msg.textContent=/Invalid login/i.test(t)?'邮箱或密码不对':/already registered/i.test(t)?'这个邮箱已经注册过了，直接登录吧':('出错了：'+t);return;}
-  $('inPass').value='';toast('登录成功');const {data}=await sb.auth.getSession();setUser(data.session&&data.session.user);show('sWin');submitScore();
+  $('inPass').value='';toast('登录成功');const {data}=await sb.auth.getSession();setUser(data.session&&data.session.user);show(loginFrom);if(loginFrom==='sWin')submitScore();
 };
 function setUser(u){user=u||null;nick=user?((user.user_metadata&&user.user_metadata.nickname)||user.email.split('@')[0]):'';}
 async function submitScore(){
   const el=$('wNet');el.textContent='';
   if(!sb){el.textContent='排行榜暂时连不上';return;}
-  if(!user){el.textContent='登录后成绩可以上排行榜 ';const b=document.createElement('button');b.className='linkbtn';b.textContent='登录上榜';b.onclick=()=>{setMode(false);show('sLogin');};el.append(b);return;}
+  if(!user){el.textContent='登录后成绩可以上排行榜 ';const b=document.createElement('button');b.className='linkbtn';b.textContent='登录上榜';b.onclick=()=>{loginFrom='sWin';setMode(false);show('sLogin');};el.append(b);return;}
   if(G.submitted===G.winTime)return;
   const t=Math.round(G.winTime*100)/100;
   if(t<25){el.textContent='快得不像人类……这次成绩没有上传';return;}

@@ -1,5 +1,6 @@
 <!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
 <title>希思罗机场传奇</title>
+<link rel="stylesheet" href="achievements.css">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=ZCOOL+QingKe+HuangYou&family=Bebas+Neue&family=JetBrains+Mono:wght@700&family=Noto+Sans+SC:wght@500;900&display=swap">
 <style>
@@ -19,6 +20,7 @@ body{font-family:var(--body);color:var(--ink);-webkit-user-select:none;user-sele
 /* HUD */
 #hud{position:absolute;left:0;right:0;top:0;padding:calc(env(safe-area-inset-top,0px) + 10px) 14px 0;display:flex;flex-direction:column;gap:6px;pointer-events:none}
 .hrow{display:flex;align-items:center;gap:10px}
+.hrow:last-child{flex-wrap:wrap}
 .track{flex:1;position:relative;height:18px;background:rgba(255,246,230,.92);border:2.5px solid var(--line);border-radius:10px;box-shadow:2px 2px 0 var(--line)}
 .fill{position:absolute;left:0;top:0;bottom:0;background:repeating-linear-gradient(-45deg,var(--red) 0 8px,#ff3d52 8px 16px);border-radius:7px 0 0 7px;width:0}
 .mk{position:absolute;top:50%;transform:translate(-50%,-50%);font-size:13px;font-weight:900;white-space:nowrap}
@@ -87,7 +89,7 @@ a.brow{text-decoration:none;box-sizing:border-box}
 .screen.menu .fidsbox{margin-inline:auto}
 .fidsbox{margin-block:auto}
 .toprow{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
-.acct{display:flex;align-items:center;gap:8px;font:700 12px "JetBrains Mono",monospace;color:rgba(255,255,255,.8)}
+.acct{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font:700 12px "JetBrains Mono",monospace;color:rgba(255,255,255,.8)}
 .acct b{color:#ffd200;font-family:var(--body);font-weight:900}
 .linkbtn{appearance:none;border:1.5px solid rgba(255,210,0,.6);background:rgba(255,210,0,.08);color:#ffd200;font:900 12px var(--body);border-radius:999px;padding:4px 12px;cursor:pointer}
 .linkbtn:hover{background:rgba(255,210,0,.2)}
@@ -170,6 +172,7 @@ h2{margin:0;font-family:var(--display);font-weight:400;font-size:clamp(34px,9vw,
     <div class="hrow">
       <div class="danger" id="danger"><span class="stat" id="dtext">老妈距离</span><div class="dbar"><div class="dfill" id="dfill"></div></div></div>
       <span class="stat" id="sCam">📷 0</span>
+      <span class="stat" id="sZ9">Z9 0/0</span>
       <span class="stat" id="sDist">0 / 2000 m</span>
     </div>
   </div>
@@ -179,7 +182,7 @@ h2{margin:0;font-family:var(--display);font-weight:400;font-size:clamp(34px,9vw,
   <!-- main menu -->
   <div class="screen menu" id="sMenu">
     <div class="fidsbox">
-      <div class="toprow"><div class="eyebrow">LHR · EGLL · 51°28′N 000°27′W</div><div class="acct"><span id="acctName">未登录</span><button class="linkbtn" id="bPw" hidden>设置密码</button><button class="linkbtn" id="bLogin">登录 Sign in</button></div></div>
+      <div class="toprow"><div class="eyebrow">LHR · EGLL · 51°28′N 000°27′W</div><div class="acct"><button class="linkbtn" data-achievements>🏆 成就 0/2</button><span id="acctName">未登录</span><button class="linkbtn" id="bPw" hidden>设置密码</button><button class="linkbtn" id="bLogin">登录 Sign in</button></div></div>
       <div class="mt">
         <h1 class="mt-cn"><span style="display:inline-block">伦敦希思罗</span><span style="display:inline-block">机场传奇</span></h1>
         <div class="mt-en">London Heathrow Airport Legend</div>
@@ -266,6 +269,8 @@ h2{margin:0;font-family:var(--display);font-weight:400;font-size:clamp(34px,9vw,
         <div><b id="wHit">0</b><span>挨拖鞋/摔跤</span></div>
       </div>
       <div class="best" id="wBest"></div>
+      <div class="best" id="wZ9"></div>
+      <button class="linkbtn achievement-win" data-achievements>🏆 成就 0/2</button>
       <div class="net" id="wNet"></div>
       <div class="row"><button class="go" id="bAgain">再跑一次</button><button class="go alt" data-share="win">分享战绩</button></div>
       <button class="back" id="bMenu3">← 返回航班列表 All games</button>
@@ -298,6 +303,7 @@ h2{margin:0;font-family:var(--display);font-weight:400;font-size:clamp(34px,9vw,
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script src="achievements.js"></script>
 <script>
 'use strict';
 const $=id=>document.getElementById(id);
@@ -386,7 +392,7 @@ addEventListener('resize',resize);resize();
 /* ---------- state ---------- */
 let state='menu',G=null;
 function newGame(){
-  G={dist:0,t:0,speed:300,gap:170,cams:0,hits:0,
+  G={dist:0,t:0,speed:300,gap:170,cams:0,hits:0,z9Collected:0,z9Total:0,
     p:{y:0,vy:0,jumps:0,slide:0,stumble:0,inv:0,onGround:true,queue:false,run:0},
     obs:[],items:[],slips:[],parts:[],pops:[],bub:{},
     nextObs:700,nextItem:500,throwT:6,windup:0,throwH:'low',
@@ -461,6 +467,7 @@ function slide(){
   else if(p.slide<=0){p.slide=.62;SFX.slide();dust(PX-10,GY,8);}
 }
 addEventListener('keydown',e=>{
+  if(document.querySelector('.achievement-dialog[open]'))return;
   if(e.target&&e.target.tagName==='INPUT')return;
   const k=e.code;
   if(['Space','ArrowUp','ArrowDown','KeyW','KeyS'].includes(k))e.preventDefault();
@@ -605,7 +612,7 @@ function update(dt){
   G.light=Math.max(0,G.light-dt);
 
   if(G.gap<=0){G.gap=0;caught();}
-  if(G.dist>=GOAL)finish();
+  if(G.dist>=GOAL&&state==='play')finish();
 }
 function momX(){return PX-34-G.gap*.56;}
 function heroBox(){
@@ -616,12 +623,13 @@ function heroBox(){
 function mkItem(x,y){
   const prog=G.dist/GOAL;
   let kind=Math.random()<.5?'cam':'lens';
-  if(prog>.12&&G.dist-G.lastZ9>4500&&Math.random()<.18){kind='z9';G.lastZ9=G.dist;}
+  if(prog>.12&&G.dist-G.lastZ9>4500&&Math.random()<.18){kind='z9';G.lastZ9=G.dist;G.z9Total++;}
   return{x,y,kind,b:Math.random()*6,got:false};
 }
 function collect(it){
   const y=GY+it.y;
   if(it.kind==='z9'){
+    G.z9Collected++;
     G.p.inv=3.2;G.gap=Math.min(GAPMAX,G.gap+50);SFX.power();
     pop(it.x,y-10,'尼康Z9是对的！无敌冲刺！','#ffc83d',17);G.flash=.5;G.flashC='#ffc83d';
   }else{
@@ -643,6 +651,7 @@ function caught(){
 }
 function finish(){
   setState('ending');G.endT=0;G.winTime=G.t;
+  achievements.complete('zrh-run',{won:true,z9Collected:G.z9Collected,z9Total:G.z9Total});
   G.obs=[];G.slips=[];G.windup=0;
   say('mom','……注意安全！早点回家！',2.4);
   setTimeout(()=>state==='ending'&&say('hero','谢谢妈！！',1.6),900);
@@ -1056,6 +1065,7 @@ function hud(){
   $('danger').classList.toggle('hot',hot);
   $('dtext').textContent=hot?'老妈要追上了！':'老妈距离';
   $('sCam').textContent='📷 '+G.cams;
+  $('sZ9').textContent='Z9 '+G.z9Collected+'/'+G.z9Total;
   $('sDist').textContent=`${Math.floor(Math.min(G.dist,GOAL)/10)} / 2000 m`;
 }
 
@@ -1087,6 +1097,7 @@ function winScreen(){
   const h=G.hits;
   $('wRank').textContent=h===0?'称号：传奇拍机佬（零失误）':h<=2?'称号：资深拍机佬':h<=5?'称号：狼狈但拍到了':'称号：浑身拖鞋印的追梦人';
   $('wTime').textContent=G.winTime.toFixed(1);$('wCam').textContent=G.cams;$('wHit').textContent=h;
+  $('wZ9').textContent=G.z9Total?`尼康 Z9：${G.z9Collected}/${G.z9Total} · 收齐本局全部 Z9 可解锁成就`:'本局未出现尼康 Z9，下次再来挑战收藏成就！';
   let nb=false;
   if(!best||G.winTime<best){best=G.winTime;nb=true;try{localStorage.setItem('zrh_run_best',String(best));}catch(e){}}
   $('wBest').textContent=nb?'新纪录！':`最快纪录：${best.toFixed(1)} 秒`;
@@ -1105,6 +1116,7 @@ const lsGet=k=>{try{return localStorage.getItem(k)}catch(e){return null}};
 const lsSet=(k,v)=>{try{localStorage.setItem(k,v)}catch(e){}};
 let lbGame=lsGet('lhr_lb')||GAME;
 try{if(window.supabase)sb=window.supabase.createClient(SB_URL,SB_KEY,{auth:{persistSession:true,detectSessionInUrl:true}});}catch(e){sb=null;}
+const achievements=LHRAchievements.mount({client:sb,url:SB_URL,key:SB_KEY,onLogin:()=>openLogin(state==='win'?'sWin':'sMenu')});
 
 function openLogin(from){loginFrom=from;setMode(false);$('inNick').value=nick||lsGet('zrh_nick')||'';show('sLogin');}
 $('bLoginClose').onclick=()=>show(loginFrom);
