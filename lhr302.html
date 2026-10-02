@@ -256,6 +256,7 @@ body.touch .btn-ic{width:40px;height:40px}
   <div class="screen" id="sVN" hidden>
     <div class="stage"><img class="por" id="pL" alt=""><img class="por" id="pR" alt=""></div>
     <div class="vtime" id="vTime">21:47 · LHR T2</div>
+    <div class="vstamp" id="vStamp"></div>
     <div class="vtop"><button id="vSkip">跳过剧情 ▶▶</button></div>
     <div class="choices" id="vChoices" hidden></div>
     <div class="vbox"><div class="vname" id="vName"></div><div class="vtext" id="vText"></div><div class="vnext" id="vNext">▼</div></div>
@@ -1254,10 +1255,11 @@ function vnNext(){
   if(!s){const d=vn.done;vn=null;$('sVN').classList.remove('choosing');show(null);state='end';d&&d();return;}
   if(s.time){$('vTime').textContent=s.time;return vnNext();}
   if(s.run){s.run();return vnNext();}
+  if(s.stamp){stamp(s.stamp);return vnNext();}
   if(s.choice){
     const box=$('vChoices');box.innerHTML='';box.hidden=false;$('vNext').hidden=true;
     s.choice.forEach(o=>{const b=document.createElement('button');b.innerHTML=(o.icon?`<span class="ico-box">${LHRUI.svg(o.icon)}</span>`:'')+o.t+(o.sub?`<small>${o.sub}</small>`:'')+(o.last?'<small class="last">上次选择</small>':'');b.onclick=ev=>{ev.stopPropagation();box.hidden=true;SFX.pick();o.go&&o.go();if(vn.skipAll)vn.i=vn.script.length;vnNext();};box.append(b);});
-    const h=document.createElement('div');h.className='chead';h.textContent='选一件装备带上';box.prepend(h);$('sVN').classList.add('choosing');
+    const h=document.createElement('div');h.className='chead';h.textContent=s.title||'选一件装备带上';box.prepend(h);$('sVN').classList.add('choosing');
     setTimeout(()=>box.querySelector('button')?.focus(),50);return;
   }
   $('vChoices').hidden=true;$('sVN').classList.remove('choosing');
@@ -1273,6 +1275,7 @@ function vnNext(){
   typing=setInterval(()=>{i+=1;el.textContent=text.slice(0,i);if(i%3===0)SFX.type();if(i>=text.length){clearInterval(typing);typing=null;$('vNext').hidden=false;}},26);
   vn.full=text;
 }
+function stamp(n){const el=$('vStamp');el.innerHTML='白给 <b>×'+n+'</b>';el.classList.remove('on');void el.offsetWidth;el.classList.add('on');beep(196,.35,'sawtooth',.05,-60);beep(147,.5,'sawtooth',.045,-40,.12);clearTimeout(stamp._t);stamp._t=setTimeout(()=>el.classList.remove('on'),2600);}
 function vnAdvance(){if(!vn)return;if(!$('vChoices').hidden)return;if(typing){clearInterval(typing);typing=null;$('vText').textContent=vn.full;$('vNext').hidden=false;return;}vnNext();}
 $('sVN').addEventListener('click',e=>{if(e.target.closest('.vtop')||e.target.closest('.choices'))return;vnAdvance();});
 function vnSkip(){if(!vn)return;clearInterval(typing);typing=null;vn.skipAll=true;
@@ -1338,9 +1341,227 @@ function winScript(){
     {who:'narr',t:'未完待续 · To be continued'},
   ];
 }
+/* =====================================================================
+   第二章《五边叛变》The Betrayal on Final · 23:03 → 00:12
+   {stamp:n} = 「白给 ×n」印章；ch2Pick 记录安慰姐姐的选项
+   ===================================================================== */
+let ch2Pick='';
+const cN=(t,o={})=>({who:'narr',t,...o});
+const cZ=(face,t)=>({who:'rui',face,t});
+const cS=(t,face='normal')=>({who:'you',face,t});
+const cD=(face,t)=>({who:'dave',face,t});
+const CH2=[
+  {time:'23:03 · T2 车辆入口坡道'},
+  cN('第二章 ·《五边叛变》 The Betrayal on Final',{clear:true}),
+  cN('旧 Mini 停在坡道尽头，引擎熄了又响，暖风像在对着你吹气。风从西边来，裹着一股煤油味。'),
+  cZ('happy','（从包里摸出一个保温杯，倒了一杯塞过来）喏，热的。别看它长得像茶，它确实是茶。'),
+  cZ('normal','拍飞机第一课。'),
+  cS('什么？'),
+  cZ('normal','接受白给。'),
+  cS('……白给？','surprised'),
+  cZ('happy','白跑一趟，什么都没拍到。你在希思罗待久了就会明白，这不是意外，这是日常。'),
+  cS('那你为什么还来？'),
+  cZ('normal','因为它偶尔不白给。'),
+  cN('ZRH 把相机包放在引擎盖上，拉开拉链：一台相机、一支长焦、两块电池、一本被雨泡过又晒干的笔记本。'),
+  cZ('normal','这台机器，我攒了半年。'),
+  cS('（半年……）'),
+  {if:()=>G.tagN===3,...cZ('happy','对了，你捡的那三张行李牌收好。有一张是三十年前的旧版，全世界没几个人还留着。以后比今晚的照片值钱。')},
+
+  {time:'23:05 · 坡道 · 暖场'},
+  cN('南边那条跑道 —— 27L —— 亮起一串灯。'),
+  cN('ZRH 举起相机。快门。STEVEN 从车门边弹起来，飞机从头顶压过去，风把头发全吹到脸上。'),
+  cZ('normal','A320。通勤车。别浪费快门。'),
+  cS('那不也是飞机吗？'),
+  cZ('happy','你以后会嫌弃它的。所有人都会。'),
+  cN('快门又响了两下。'),
+  cZ('normal','这张能卖。'),
+  cS('卖？卖给谁？','surprised'),
+  cZ('normal','杂志。或者谁也不卖，挂墙上自己看。都行。'),
+  {if:()=>G.spotted>0,...cZ('happy','顺便说一句 —— 你刚才在楼里跑的样子，我全程在下面看着，笑死。')},
+
+  {time:'23:08 · 北边那条跑道'},
+  cN('雾里，北边落下两点灯。ZRH 一动不动，把相机放下了。'),
+  cS('不拍吗？'),
+  cZ('normal','27R。货机。从这儿拍过去，隔着两条滑行道和一整排灯箱 —— 出来就是一张铁板烧。'),
+  cS('什么叫铁板烧？'),
+  cZ('sad','糊的，还带油光。'),
+  {stamp:1},
+
+  {time:'23:11 · 巡逻车'},
+  cN('一束车灯从背后扫过来。'),
+  cS('（完了完了完了。）','surprised'),
+  cZ('normal','别动。'),
+  cN('车停下。车窗降下来 —— 一张熟脸。是 Dave。他没穿外套，手里端着一个印着「LHR STAFF」的马克杯，杯口在冒热气。'),
+  {if:()=>G.spotted>0,...cD('happy','又是你。今晚你已经在我这儿挂过一次号了，小子。')},
+  {if:()=>G.spotted===0,...cD('normal','你。今晚整层楼的警报一次都没响。你是走路不带声，还是运气好？')},
+  cD('normal','放松。我下班了。这儿也不是我的辖区 —— 这条坡道归交警管。'),
+  cZ('angry','Dave，你们今晚到底在搞什么？顶层说清就清，连我这种正经停车的都不放过。'),
+  cD('normal','我可以告诉你，但你会不痛快。'),
+  cZ('angry','我今天已经很不痛快了。'),
+  cD('normal','今晚 27L 有计划外的东西要落。上面不想让人在停车楼上架机器。'),
+  cZ('surprised','……什么计划外的东西？'),
+  cD('normal','我不知道。真不知道。我只知道，我十一年前刚来这儿的时候，也是站在这个坡道上，看第一架 747 落下来。'),
+  cN('Dave 喝了一口茶，把杯子搁在车顶。'),
+  cD('normal','听好，丫头。在这儿，谁落哪条跑道，最后一刻是塔台说了算。'),
+  cD('normal','27L 和 27R 之间隔着一千四百米。你在这边看着它冲着你来，三海里外它都可能被拎到北边去。'),
+  cD('normal','这行的第一条规矩：别跟五边产生感情。'),
+  cZ('normal','我从来不跟五边产生感情。我只跟它离婚。'),
+  cD('happy','……行。这话我记下了。'),
+  cN('Dave 从怀里掏出一台相机。老掉牙的，机身上缠着胶带。'),
+  cS('你也拍？','surprised'),
+  cD('happy','十一年了。我看着它们来，看着它们走。总得留个证据。'),
+  cD('normal','祝你们今晚运气好。北边要是太挤，别翻围栏 —— 那边有狗。'),
+  cS('（……记下了。）'),
+
+  {time:'23:14 · 日航 777 · 寰宇一家彩绘'},
+  cN('ZRH 的手机亮了一下。她看了一眼，呼吸变了。'),
+  cZ('surprised','……来了。'),
+  cS('哪个？'),
+  cZ('surprised','日航。波音 777。寰宇一家彩绘。'),
+  cS('彩绘是什么？'),
+  cZ('happy','就是飞机穿着一件它平时不穿的衣服。'),
+  cN('她开始念。声音越来越小，像怕吵到天上那架。'),
+  cZ('normal','六海里……准备切五边。'),
+  cS('是我们这条吗？'),
+  cZ('normal','27L。正对着我们。'),
+  cZ('sad','我等它等了三个星期。为了今晚，我跟人换了三次班。'),
+  cN('两道白灯从雾里刺出来。光越来越硬。风把草压平，连跑道边的灯都在抖。引擎声像从地板下面长出来。'),
+  cZ('surprised','切进来了。正对着我们 —— 稳了。'),
+  cS('稳了？'),
+  cZ('happy','稳了。到这儿就是最后一条直线，它不会再变了。'),
+  cN('她刚说完 —— 天上那两道白光猛地一抬。'),
+  cZ('surprised','……啊？'),
+  cS('它怎么了？','surprised'),
+  cN('机头扬起来，引擎的声音整个变了调 —— 从「嗡」变成「哗」。那架 777 从他们面前斜着滑过去，白灯一歪，越飞越高，往北边去了。几十秒后，北边那条跑道亮起一串灯，稳稳地把它接住了。'),
+  cN('风。草。远处加油站的味道。ZRH 举着相机。快门，一次都没有响。'),
+  cS('姐……','sad'),
+  cZ('surprised','……'),
+  cS('它……它转会了？'),
+  cZ('angry','复飞。前面那架刚落地的还没脱离跑道，塔台让它重来。'),
+  cZ('angry','然后 —— 然后塔台顺手把它给了北边。'),
+  cZ('angry','五边叛变。进近跳槽。临门一脚被换跑道。'),
+  cS('那它还会回来吗？'),
+  cZ('angry','它回不来了。它今晚只落一次。它现在在北边，被三十个人围着拍。'),
+  {stamp:2},
+  cN('ZRH 蹲了下去，把脸埋在膝盖上。'),
+  cZ('sad','三个星期。三次班。我连它的机号都背下来了。'),
+  cZ('sad','结果我拍到的是它的屁股。还是逆光的。'),
+  cS('（不知道该说什么。风很冷。）','sad'),
+  {title:'怎么安慰姐姐？',choice:[
+    {t:'「姐，你刚教我的第一课，我学会了。」',go:()=>{ch2Pick='a';}},
+    {t:'「……那我们就去北边。」',go:()=>{ch2Pick='b';}},
+    {t:'「其实它屁股也挺好看的。」',go:()=>{ch2Pick='c';}},
+  ]},
+  {if:()=>ch2Pick==='a',...cZ('happy','……你学得真快。行，及格了。')},
+  {if:()=>ch2Pick==='b',...cZ('surprised','北边？那边有狗。')},
+  {if:()=>ch2Pick==='b',...cS('你说过，拍到照片的人都只是站在了对的地方。')},
+  {if:()=>ch2Pick==='b',...cZ('sad','……这话真是我说的吗。')},
+  {if:()=>ch2Pick==='c',...cZ('angry','STEVEN。')},
+  {if:()=>ch2Pick==='c',...cS('……')},
+  {if:()=>ch2Pick==='c',...cZ('happy','……噗。你等着，等它落下来我再收拾你。')},
+
+  {time:'23:30 · 那架「很特别的飞机」'},
+  cN('接下来的二十分钟，南边落了四架窄体。ZRH 一架都没举相机。',{clear:true}),
+  cS('（时差上来了。眼皮像灌了铅。）'),
+  cZ('normal','困了？'),
+  cS('有一点。'),
+  cZ('normal','再撑一会儿。它快到了。'),
+  cS('你到现在都没告诉我它是什么。'),
+  cZ('normal','……'),
+  cN('她转过身来，第一次正对着弟弟说话。'),
+  cZ('normal','波音 747-400。涂着一身老爷子的复古涂装。'),
+  cZ('normal','今晚是它最后一次以客运的身份落希思罗。下个月，它就退役了。'),
+  cS('747……就是那个有驼峰的？','surprised'),
+  cZ('happy','对。四台引擎，两层楼，一代人的青春。'),
+  cZ('sad','我小时候我爸带我去看飞机，看的就是它。那时候我趴在他肩膀上睡着了，醒来的时候，那架飞机刚好从头顶过去。'),
+  cN('她低头，用指节敲了敲引擎盖上的相机包。'),
+  cZ('normal','这台镜头，花了我攒了半年的钱。'),
+  cZ('normal','今晚这组照片，我要投给一家杂志。如果过了 —— 我就不用再上夜班了。'),
+  cS('（她从来没跟我说过这个。）'),
+  cS('姐，你在伦敦……很累吗？','sad'),
+  cZ('happy','累啊。今天不是刚被 security 从停车楼上赶下来吗，相机包还差点丢在里面。'),
+  {if:()=>G.tagN===3,...cZ('happy','还好你顺手捡了三张行李牌，够换一顿好饭了。')},
+  cZ('normal','但是我跟你讲，拍飞机这件事最公平的地方是 —— 你能控制的，只有你自己站在哪儿。'),
+  cZ('normal','风啊、塔台啊、别人怎么排班啊，全是别人的事。'),
+  cZ('happy','所以，站对地方，然后等。'),
+  cZ('happy','行了，上课结束。喝茶。'),
+
+  {time:'23:48 · 风切变'},
+  cN('南边那串灯又亮了。一架 A350 压着灯下来 —— 在离地三百英尺的地方忽然抬头，尖啸着从头顶拉走。'),
+  cS('又复飞？！','surprised'),
+  cZ('surprised','风切变。今晚风太乱。'),
+  cN('对讲机里炸出一串嘈杂。跑道上，一辆黄色的工程车慢慢开了出去。'),
+  cZ('surprised','跑道检查？现在？'),
+  cD('normal','（车窗降下来）27L 暂时关了。十来分钟。'),
+  cZ('surprised','Dave！'),
+  cD('normal','别问我。风把一个灯箱吹歪了。'),
+  cZ('sad','……那它呢？那架 747 呢？'),
+  cD('normal','排班表上，它已经被推到北边了。27R。'),
+  {stamp:3},
+  cN('还没开始，就已经白给。'),
+  cS('（白给。我心里莫名其妙地冒出了这个词。）'),
+  cZ('angry','不能。'),
+  cN('她把相机包往肩上一甩。'),
+  cZ('angry','走吧。北边。'),
+  cS('走过去？','surprised'),
+  cZ('normal','绕机场。四公里。'),
+  cS('……'),
+  cN('他们跑向那台旧 Mini。ZRH 拧钥匙 —— 引擎发出一声像咳嗽的声音，然后什么都没有。'),
+  cZ('sad','……你别在这个时候。'),
+  cN('第二下。第三下。旧 Mini 只肯发出一点干巴巴的响。'),
+  cS('姐……','sad'),
+  cD('happy','（在车里探出头）你们两个，上车。'),
+  cZ('surprised','你不是说这条坡道归交警管吗？'),
+  cD('normal','我现在下班了。'),
+  cZ('happy','Dave，你是我在伦敦最喜欢的保安。'),
+  cD('angry','我是主管。'),
+
+  {time:'00:04 · 北边围栏外'},
+  cN('Dave 的车沿着一条地图上都没有的通勤路往北开。过了一排仓库、一个垃圾箱堆、一只被车灯照得站着不动的狐狸。',{clear:true}),
+  cS('（真的有狗。……不，那是狐狸。）'),
+  cD('normal','只能送到这儿。前面是跑道保护区，进去我就得写检查。'),
+  cD('normal','铁丝网右边有个缺口。——我不知道。我什么都没说。'),
+  cN('他们跳下车。铁丝网对面就是 27R。头顶的进近灯从东边排到西边，像一条被压低了的银河。'),
+  cZ('normal','位置不对。我们是侧着的，还是逆光。'),
+  cS('那……'),
+  cZ('happy','但是从来没人从这个角度拍过。'),
+  cZ('happy','所有人都挤在南边那个著名机位。没有一个人会跑到这儿来。'),
+  cZ('happy','站对地方 —— 有时候就是别人不去的地方。'),
+  {time:'00:11 · 27R 围栏外'},
+  cN('雾散了一点。远处，一条灯带亮起来。'),
+  cZ('surprised','来了。'),
+  cN('一个巨大的影子压低高度，缓缓滑过来。四台引擎。机头高高隆起 —— 那是一个驼峰。它从铁丝网对面横着划过去，近得能看见起落架上的灯，和机身上一闪而过的复古涂装。'),
+  cN('它没有落北边。它在铁丝网对面那串灯的上方，继续往南 —— 落回了 27L。'),
+  cS('姐……它落回去了。','surprised'),
+  cN('跑道检查只用了十一分钟。27L 重新开放，它又被排回了原来那条。'),
+  {stamp:4},
+  cN('他们跑了四公里，跑到了错的那一边。'),
+  cZ('happy','……'),
+  cS('姐，你不生气？'),
+  cZ('happy','生气什么。'),
+  cZ('happy','你看这个角度。逆光。侧身。四台引擎的热浪把灯都吹歪了。'),
+  cZ('normal','南边那个机位拍不到这个。永远拍不到。'),
+  cN('快门声连成一片。这一次，相机响了。'),
+  cZ('happy','我等了三个星期，不是为了看它落在哪条跑道。'),
+  cZ('happy','是为了看它落下来的这几秒钟。'),
+  cZ('normal','STEVEN，你记住今天。以后你会拍很多飞机，很多比它更好的飞机。'),
+  cZ('normal','但你不会忘记，你第一次白给之后拍到的那一张。'),
+  cS('（风很大。可是我不冷了。）','happy'),
+  {time:'00:12 · LHR'},
+  cN('南边，27L 的灯又亮起一排。更远的地方，一架四发巨无霸的引擎开始低吼 —— 是 301 机坪的方向。',{clear:true}),
+  cZ('surprised','……301？今晚 301 那边还有一架要走。'),
+  cS('你到底替希思罗藏了多少事？'),
+  cZ('happy','今晚？今晚它把家底都掏出来了。'),
+  cN('一个驼峰刚刚落下。另一个巨影正要起飞。'),
+  cN('有些热爱，不会被时间、被阻拦、被现实打败。'),
+  cN('因为——天空，从来都在。'),
+  cN('〔第二章 完〕'),
+];
+STORY.nextChapter=CH2;STORY.ready=true;
+
 function playNextChapter(){
   if(STORY.nextUrl){location.href=STORY.nextUrl;return;}
-  if(STORY.ready&&STORY.nextChapter.length){playVN(STORY.nextChapter,()=>show('sWin'),'23:05 · ???');return;}
+  if(STORY.ready&&STORY.nextChapter.length){ch2Pick='';playVN(STORY.nextChapter,()=>show('sWin'),'23:03 · T2 车辆入口坡道');return;}
   playVN([{who:'narr',t:'那架「很特别的飞机」到底是什么？ZRH 又为什么非要今晚来拍它？',clear:true},{who:'rui',face:'happy',t:'后面的故事还在写哦——下次登机见！'}],()=>show('sWin'),'23:05 · ???');
 }
 
